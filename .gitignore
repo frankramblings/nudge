@@ -5,3 +5,6 @@
 **/.clang-cache/
 **/.local-home/
 DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate

@@ -1,4 +1,4 @@
-# NagReminders Implementation Plan
+# Nudge Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -11,16 +11,16 @@
 ### Task 1: Scaffold Project and Targets
 
 **Files:**
-- Create: `NagReminders/project.yml`
-- Create: `NagReminders/README.md`
-- Create: `NagReminders/NagReminders.entitlements`
-- Create: `NagReminders/NagReminders-macOS.entitlements`
+- Create: `project.yml`
+- Create: `README.md`
+- Create: `Nudge.entitlements`
+- Create: `Nudge-macOS.entitlements`
 
 **Step 1: Define project spec**
 - Add app targets for iOS and macOS, shared framework target (`NagCore`), unit tests, and iOS UI tests.
 
 **Step 2: Generate project**
-- Run `xcodegen generate` in `NagReminders`.
+- Run `xcodegen generate` in the repository root.
 
 **Step 3: Commit checkpoint (local)**
 - Stage project scaffolding.
@@ -28,7 +28,7 @@
 ### Task 2: Write Failing Core Scheduler Tests
 
 **Files:**
-- Create: `NagReminders/Tests/NagCoreTests/NagSchedulerTests.swift`
+- Create: `NagCorePackage/Tests/NagCoreTests/NagSchedulerTests.swift`
 
 **Step 1: Write failing tests**
 - Add tests for:
@@ -47,11 +47,11 @@
 ### Task 3: Implement Shared Domain Models and Storage
 
 **Files:**
-- Create: `NagReminders/Sources/NagCore/Models/NagPolicy.swift`
-- Create: `NagReminders/Sources/NagCore/Models/NagSession.swift`
-- Create: `NagReminders/Sources/NagCore/Models/AppSettings.swift`
-- Create: `NagReminders/Sources/NagCore/Persistence/NagPolicyStore.swift`
-- Create: `NagReminders/Sources/NagCore/Persistence/NagSessionStore.swift`
+- Create: `NagCorePackage/Sources/NagCore/Models/NagPolicy.swift`
+- Create: `NagCorePackage/Sources/NagCore/Models/NagSession.swift`
+- Create: `NagCorePackage/Sources/NagCore/Models/AppSettings.swift`
+- Create: `NagCorePackage/Sources/NagCore/Persistence/NagPolicyStore.swift`
+- Create: `NagCorePackage/Sources/NagCore/Persistence/NagSessionStore.swift`
 
 **Step 1: Implement SwiftData models and store protocols**
 - Define global/per-reminder policy, session lifecycle fields, snooze state, counters, and caps.
@@ -65,10 +65,10 @@
 ### Task 4: Implement EventKit Repository and Reminder CRUD
 
 **Files:**
-- Create: `NagReminders/Sources/NagCore/Reminders/RemindersRepository.swift`
-- Create: `NagReminders/Sources/NagCore/Reminders/EventKitRemindersRepository.swift`
-- Create: `NagReminders/Sources/NagCore/Reminders/MockRemindersRepository.swift`
-- Create: `NagReminders/Sources/NagCore/Models/ReminderItem.swift`
+- Create: `NagCorePackage/Sources/NagCore/Reminders/RemindersRepository.swift`
+- Create: `NagCorePackage/Sources/NagCore/Reminders/EventKitRemindersRepository.swift`
+- Create: `NagCorePackage/Sources/NagCore/Reminders/MockRemindersRepository.swift`
+- Create: `NagCorePackage/Sources/NagCore/Models/ReminderItem.swift`
 
 **Step 1: Add async EventKit wrapper**
 - Request access, list calendars, fetch reminders, create/update/complete/delete/move reminders.
@@ -79,11 +79,11 @@
 ### Task 5: Implement Notification and Scheduling Engine
 
 **Files:**
-- Create: `NagReminders/Sources/NagCore/Notifications/NotificationClient.swift`
-- Create: `NagReminders/Sources/NagCore/Notifications/UserNotificationClient.swift`
-- Create: `NagReminders/Sources/NagCore/Notifications/NagScheduler.swift`
-- Create: `NagReminders/Sources/NagCore/Notifications/NagEngine.swift`
-- Create: `NagReminders/Sources/NagCore/Notifications/NotificationConstants.swift`
+- Create: `NagCorePackage/Sources/NagCore/Notifications/NotificationClient.swift`
+- Create: `NagCorePackage/Sources/NagCore/Notifications/UserNotificationClient.swift`
+- Create: `NagCorePackage/Sources/NagCore/Notifications/NagScheduler.swift`
+- Create: `NagCorePackage/Sources/NagCore/Notifications/NagEngine.swift`
+- Create: `NagCorePackage/Sources/NagCore/Notifications/NotificationConstants.swift`
 
 **Step 1: Implement `NagScheduler` pure logic**
 - Compute active sessions, next fire times, session caps, and global caps.
@@ -100,9 +100,9 @@
 ### Task 6: Implement App Coordinator + Deep Link Routing
 
 **Files:**
-- Create: `NagReminders/Sources/NagCore/App/DeepLinkRouter.swift`
-- Create: `NagReminders/Sources/NagCore/App/BackgroundRefreshCoordinator.swift`
-- Create: `NagReminders/Sources/NagCore/App/NagAppController.swift`
+- Create: `NagCorePackage/Sources/NagCore/App/DeepLinkRouter.swift`
+- Create: `NagCorePackage/Sources/NagCore/App/BackgroundRefreshCoordinator.swift`
+- Create: `NagCorePackage/Sources/NagCore/App/NagAppController.swift`
 
 **Step 1: Deep-link handling**
 - Route notification taps to reminder detail, quick snooze, and full-screen Nag Screen.
@@ -114,7 +114,7 @@
 ### Task 7: Implement Shared SwiftUI Views and ViewModels
 
 **Files:**
-- Create: `NagReminders/Sources/NagCore/UI/*`
+- Create: `NagCorePackage/Sources/NagCore/UI/*`
 
 **Step 1: Reminders-like list UI**
 - Smart lists + reminder rows + inline add + swipe actions.
@@ -131,10 +131,10 @@
 ### Task 8: Platform App Targets and Scene Wiring
 
 **Files:**
-- Create: `NagReminders/Apps/iOS/NagRemindersIOSApp.swift`
-- Create: `NagReminders/Apps/macOS/NagRemindersMacApp.swift`
-- Create: `NagReminders/Apps/iOS/Info.plist`
-- Create: `NagReminders/Apps/macOS/Info.plist`
+- Create: `Apps/iOS/NudgeIOSApp.swift`
+- Create: `Apps/macOS/NudgeMacApp.swift`
+- Create: `Apps/iOS/Info.plist`
+- Create: `Apps/macOS/Info.plist`
 
 **Step 1: Wire model container and environment**
 - Provide stores/repositories/controller via environment.
@@ -145,8 +145,8 @@
 ### Task 9: Complete Tests (GREEN)
 
 **Files:**
-- Modify: `NagReminders/Tests/NagCoreTests/NagSchedulerTests.swift`
-- Create: `NagReminders/UITests/NagRemindersUITests/DebugNotificationSimulatorUITests.swift`
+- Modify: `NagCorePackage/Tests/NagCoreTests/NagSchedulerTests.swift`
+- Create: `UITests/NudgeUITests/DebugNotificationSimulatorUITests.swift`
 
 **Step 1: Run unit tests**
 - Verify scheduler tests pass.
@@ -160,7 +160,7 @@
 ### Task 10: Documentation and Verification
 
 **Files:**
-- Modify: `NagReminders/README.md`
+- Modify: `README.md`
 
 **Step 1: Document architecture, permissions, and constraints**
 - Include EventKit, notifications, rolling scheduling, background behavior, and Critical Alerts fallback.

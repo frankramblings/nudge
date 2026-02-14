@@ -1,6 +1,6 @@
-name: NagReminders
+name: Nudge
 options:
-  bundleIdPrefix: com.example.NagReminders
+  bundleIdPrefix: com.example.Nudge
   deploymentTarget:
     iOS: 17.0
     macOS: 14.0
@@ -21,7 +21,7 @@ packages:
     path: NagCorePackage
 
 targets:
-  NagRemindersiOS:
+  NudgeiOS:
     type: application
     platform: iOS
     sources:
@@ -33,19 +33,19 @@ targets:
         product: NagCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.NagReminders.ios
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.ios
         TARGETED_DEVICE_FAMILY: "1,2"
-        CODE_SIGN_ENTITLEMENTS: NagReminders.entitlements
+        CODE_SIGN_ENTITLEMENTS: Nudge.entitlements
     info:
       path: Apps/iOS/Info.plist
       properties:
-        CFBundleDisplayName: NagReminders
+        CFBundleDisplayName: Nudge
         UIApplicationSupportsIndirectInputEvents: true
         UILaunchScreen: {}
-        NSRemindersUsageDescription: NagReminders needs access to your reminders to show and manage tasks.
-        NSUserNotificationsUsageDescription: NagReminders uses notifications for repeating overdue reminder alerts.
+        NSRemindersUsageDescription: Nudge needs access to your reminders to show and manage tasks.
+        NSUserNotificationsUsageDescription: Nudge uses notifications for repeating overdue reminder alerts.
         BGTaskSchedulerPermittedIdentifiers:
-          - com.example.NagReminders.refresh
+          - com.example.Nudge.refresh
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
@@ -57,7 +57,7 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
 
-  NagRemindersmacOS:
+  NudgemacOS:
     type: application
     platform: macOS
     sources:
@@ -69,14 +69,14 @@ targets:
         product: NagCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.NagReminders.mac
-        CODE_SIGN_ENTITLEMENTS: NagReminders-macOS.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.mac
+        CODE_SIGN_ENTITLEMENTS: Nudge-macOS.entitlements
     info:
       path: Apps/macOS/Info.plist
       properties:
-        CFBundleDisplayName: NagReminders
-        NSRemindersUsageDescription: NagReminders needs access to your reminders to show and manage tasks.
-        NSUserNotificationsUsageDescription: NagReminders uses notifications for repeating overdue reminder alerts.
+        CFBundleDisplayName: Nudge
+        NSRemindersUsageDescription: Nudge needs access to your reminders to show and manage tasks.
+        NSUserNotificationsUsageDescription: Nudge uses notifications for repeating overdue reminder alerts.
 
   NagCoreTests:
     type: bundle.unit-test
@@ -88,41 +88,41 @@ targets:
         product: NagCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.NagReminders.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.tests
         GENERATE_INFOPLIST_FILE: YES
 
-  NagRemindersUITests:
+  NudgeUITests:
     type: bundle.ui-testing
     platform: iOS
     sources:
-      - UITests/NagRemindersUITests
+      - UITests/NudgeUITests
     dependencies:
-      - target: NagRemindersiOS
+      - target: NudgeiOS
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.NagReminders.uitests
-        TEST_TARGET_NAME: NagRemindersiOS
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.uitests
+        TEST_TARGET_NAME: NudgeiOS
         GENERATE_INFOPLIST_FILE: YES
 
 schemes:
-  NagReminders-iOS:
+  Nudge-iOS:
     build:
       targets:
-        NagRemindersiOS: all
+        NudgeiOS: all
     run:
       config: Debug
     test:
       config: Debug
       targets:
         - NagCoreTests
-        - NagRemindersUITests
+        - NudgeUITests
     archive:
       config: Release
 
-  NagReminders-macOS:
+  Nudge-macOS:
     build:
       targets:
-        NagRemindersmacOS: all
+        NudgemacOS: all
     run:
       config: Debug
     archive:

@@ -1,0 +1,683 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0724C9786704F08763FEAABF /* DeepLinkRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8DA243EDE9B225702EDEEA /* DeepLinkRouterTests.swift */; };
+		6466D6F4A4002B67587AA98A /* NagCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6F49D0B06C2F8A566C93EDDF /* NagCore */; };
+		700E13992FDA983B3AD33FE0 /* NudgeIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4B5983B231DE0BFAE180E4 /* NudgeIOSApp.swift */; };
+		77F3DE5FCB4B72B00AF311BE /* NagSchedulerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD871F8BC43BB1A14418BC2E /* NagSchedulerTests.swift */; };
+		ADD236B2F92721707320AC11 /* NudgeMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3FE6FE3AD239E999DCEA7F /* NudgeMacApp.swift */; };
+		C521C3D9C386A224B41B7572 /* NagCore in Frameworks */ = {isa = PBXBuildFile; productRef = BDD899AABBE9248708A7D7AD /* NagCore */; };
+		CDD9A0AB06A9943CB6C6D721 /* NagCore in Frameworks */ = {isa = PBXBuildFile; productRef = C3FEFC69DB0B36453AFC2F80 /* NagCore */; };
+		D2D5420D1861E77649E32E01 /* DebugNotificationSimulatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0B09D4E05F6B880B0324A /* DebugNotificationSimulatorUITests.swift */; };
+		FBCBBBD1123EB954B3FD772C /* NagEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B51ED9A38B0ED4A0B4E5361 /* NagEngineTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8D6952091D92B2FC1316CF49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C28573022B4A67500B2C4905 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F469D47F09B687B6B62DC16C;
+			remoteInfo = NudgeiOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2B8DA243EDE9B225702EDEEA /* DeepLinkRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouterTests.swift; sourceTree = "<group>"; };
+		2BB741131BF520C6EE6CB1B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		384DF36150B9346F0AE9B33C /* NagCoreTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NagCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		39F940BF331F7FB2C221CDC4 /* NudgemacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NudgemacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B51ED9A38B0ED4A0B4E5361 /* NagEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NagEngineTests.swift; sourceTree = "<group>"; };
+		546872894D95D498ED517ACA /* NudgeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NudgeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AE602B1E417F6D231526518 /* NudgeiOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NudgeiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EB0A9967E25E8843DDC1802 /* NagCorePackage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NagCorePackage; path = NagCorePackage; sourceTree = SOURCE_ROOT; };
+		89E0B09D4E05F6B880B0324A /* DebugNotificationSimulatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugNotificationSimulatorUITests.swift; sourceTree = "<group>"; };
+		8B4B5983B231DE0BFAE180E4 /* NudgeIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeIOSApp.swift; sourceTree = "<group>"; };
+		CD871F8BC43BB1A14418BC2E /* NagSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NagSchedulerTests.swift; sourceTree = "<group>"; };
+		D76A56F737EE823F7ABF4F67 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DF3FE6FE3AD239E999DCEA7F /* NudgeMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeMacApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1ABF9A2BF32DEED9D622AFCD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6466D6F4A4002B67587AA98A /* NagCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29BDD4EF68368F4885136CCA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C521C3D9C386A224B41B7572 /* NagCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E66FE2E3EA19569D3B9114A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CDD9A0AB06A9943CB6C6D721 /* NagCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1CBEE5B9522266D33878E9B6 /* NagCorePackage */ = {
+			isa = PBXGroup;
+			children = (
+				71E0AD850EE7968F6C424D40 /* Tests */,
+			);
+			path = NagCorePackage;
+			sourceTree = "<group>";
+		};
+		357F391314D3127E517E793E /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				D76A56F737EE823F7ABF4F67 /* Info.plist */,
+				8B4B5983B231DE0BFAE180E4 /* NudgeIOSApp.swift */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		413B32802688AB33F873F5F4 /* NudgeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				89E0B09D4E05F6B880B0324A /* DebugNotificationSimulatorUITests.swift */,
+			);
+			path = NudgeUITests;
+			sourceTree = "<group>";
+		};
+		4613343236BBB2058CB58E85 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				384DF36150B9346F0AE9B33C /* NagCoreTests.xctest */,
+				5AE602B1E417F6D231526518 /* NudgeiOS.app */,
+				39F940BF331F7FB2C221CDC4 /* NudgemacOS.app */,
+				546872894D95D498ED517ACA /* NudgeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5299E51611F0322C46A6BCCF /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				2BB741131BF520C6EE6CB1B8 /* Info.plist */,
+				DF3FE6FE3AD239E999DCEA7F /* NudgeMacApp.swift */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		71E0AD850EE7968F6C424D40 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				CF2FCE048EDA73C6B6A36A65 /* NagCoreTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		7986CC1FE44B0CA21C484581 = {
+			isa = PBXGroup;
+			children = (
+				C0AA32681C808B3BD0297640 /* Apps */,
+				1CBEE5B9522266D33878E9B6 /* NagCorePackage */,
+				976EC547F01833FB853AC51B /* Packages */,
+				E00598EA2704A39132736463 /* UITests */,
+				4613343236BBB2058CB58E85 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		976EC547F01833FB853AC51B /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				7EB0A9967E25E8843DDC1802 /* NagCorePackage */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		C0AA32681C808B3BD0297640 /* Apps */ = {
+			isa = PBXGroup;
+			children = (
+				357F391314D3127E517E793E /* iOS */,
+				5299E51611F0322C46A6BCCF /* macOS */,
+			);
+			path = Apps;
+			sourceTree = "<group>";
+		};
+		CF2FCE048EDA73C6B6A36A65 /* NagCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				2B8DA243EDE9B225702EDEEA /* DeepLinkRouterTests.swift */,
+				3B51ED9A38B0ED4A0B4E5361 /* NagEngineTests.swift */,
+				CD871F8BC43BB1A14418BC2E /* NagSchedulerTests.swift */,
+			);
+			path = NagCoreTests;
+			sourceTree = "<group>";
+		};
+		E00598EA2704A39132736463 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				413B32802688AB33F873F5F4 /* NudgeUITests */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2919566C18DCA96B39E939B4 /* NagCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3FDABAC7F9284C2B42C13E62 /* Build configuration list for PBXNativeTarget "NagCoreTests" */;
+			buildPhases = (
+				608E6606BD3FEDCFA6E19B77 /* Sources */,
+				29BDD4EF68368F4885136CCA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NagCoreTests;
+			packageProductDependencies = (
+				BDD899AABBE9248708A7D7AD /* NagCore */,
+			);
+			productName = NagCoreTests;
+			productReference = 384DF36150B9346F0AE9B33C /* NagCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AAD82E4C53BFCA067BD651DE /* NudgemacOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13FE9A0893115AD7DA63063A /* Build configuration list for PBXNativeTarget "NudgemacOS" */;
+			buildPhases = (
+				AD36F5F1FE4A70F748A23529 /* Sources */,
+				1ABF9A2BF32DEED9D622AFCD /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NudgemacOS;
+			packageProductDependencies = (
+				6F49D0B06C2F8A566C93EDDF /* NagCore */,
+			);
+			productName = NudgemacOS;
+			productReference = 39F940BF331F7FB2C221CDC4 /* NudgemacOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B3398EFE78C913F9ADC6347C /* NudgeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 631CB41809002A3065073A44 /* Build configuration list for PBXNativeTarget "NudgeUITests" */;
+			buildPhases = (
+				472CC56E8609F6CABA57FDB1 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BBBB1A40E8A4FD4E87326770 /* PBXTargetDependency */,
+			);
+			name = NudgeUITests;
+			packageProductDependencies = (
+			);
+			productName = NudgeUITests;
+			productReference = 546872894D95D498ED517ACA /* NudgeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		F469D47F09B687B6B62DC16C /* NudgeiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E3C4B003A06958360DDEDBE4 /* Build configuration list for PBXNativeTarget "NudgeiOS" */;
+			buildPhases = (
+				8FC73CC1E19ADC49110442D3 /* Sources */,
+				E66FE2E3EA19569D3B9114A3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NudgeiOS;
+			packageProductDependencies = (
+				C3FEFC69DB0B36453AFC2F80 /* NagCore */,
+			);
+			productName = NudgeiOS;
+			productReference = 5AE602B1E417F6D231526518 /* NudgeiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C28573022B4A67500B2C4905 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					2919566C18DCA96B39E939B4 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					AAD82E4C53BFCA067BD651DE = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					B3398EFE78C913F9ADC6347C = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = F469D47F09B687B6B62DC16C;
+					};
+					F469D47F09B687B6B62DC16C = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5F9CF0F45818684D961EEB9A /* Build configuration list for PBXProject "Nudge" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7986CC1FE44B0CA21C484581;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CD3875C53541EC6913AF7C2C /* XCLocalSwiftPackageReference "NagCorePackage" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2919566C18DCA96B39E939B4 /* NagCoreTests */,
+				B3398EFE78C913F9ADC6347C /* NudgeUITests */,
+				F469D47F09B687B6B62DC16C /* NudgeiOS */,
+				AAD82E4C53BFCA067BD651DE /* NudgemacOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		472CC56E8609F6CABA57FDB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2D5420D1861E77649E32E01 /* DebugNotificationSimulatorUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		608E6606BD3FEDCFA6E19B77 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0724C9786704F08763FEAABF /* DeepLinkRouterTests.swift in Sources */,
+				FBCBBBD1123EB954B3FD772C /* NagEngineTests.swift in Sources */,
+				77F3DE5FCB4B72B00AF311BE /* NagSchedulerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8FC73CC1E19ADC49110442D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				700E13992FDA983B3AD33FE0 /* NudgeIOSApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD36F5F1FE4A70F748A23529 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ADD236B2F92721707320AC11 /* NudgeMacApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BBBB1A40E8A4FD4E87326770 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F469D47F09B687B6B62DC16C /* NudgeiOS */;
+			targetProxy = 8D6952091D92B2FC1316CF49 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		19C4E00F58A40EC76042F1B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.1;
+			};
+			name = Release;
+		};
+		3C5FCCA449FC4522D4AC819F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5BEA01940D91A32C022141C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NudgeiOS;
+			};
+			name = Release;
+		};
+		5D049104B04207AA2B8C2CDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Nudge-macOS.entitlements";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Apps/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.mac;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6655CF83F5264DE91F0EA438 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NudgeiOS;
+			};
+			name = Debug;
+		};
+		754E266B4F599CF1F68F500F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8C6AD6E05A54F3C640811DE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Nudge.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Apps/iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AFD92D1FF2E46DA52AABEF35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Nudge.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Apps/iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C87B006FD5FC4036B31AFF0C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Nudge-macOS.entitlements";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Apps/macOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Nudge.mac;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		DEFB3318B3A4DD4757C3C56D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		13FE9A0893115AD7DA63063A /* Build configuration list for PBXNativeTarget "NudgemacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D049104B04207AA2B8C2CDB /* Debug */,
+				C87B006FD5FC4036B31AFF0C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3FDABAC7F9284C2B42C13E62 /* Build configuration list for PBXNativeTarget "NagCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				754E266B4F599CF1F68F500F /* Debug */,
+				3C5FCCA449FC4522D4AC819F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5F9CF0F45818684D961EEB9A /* Build configuration list for PBXProject "Nudge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEFB3318B3A4DD4757C3C56D /* Debug */,
+				19C4E00F58A40EC76042F1B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		631CB41809002A3065073A44 /* Build configuration list for PBXNativeTarget "NudgeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6655CF83F5264DE91F0EA438 /* Debug */,
+				5BEA01940D91A32C022141C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E3C4B003A06958360DDEDBE4 /* Build configuration list for PBXNativeTarget "NudgeiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C6AD6E05A54F3C640811DE4 /* Debug */,
+				AFD92D1FF2E46DA52AABEF35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		CD3875C53541EC6913AF7C2C /* XCLocalSwiftPackageReference "NagCorePackage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = NagCorePackage;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6F49D0B06C2F8A566C93EDDF /* NagCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NagCore;
+		};
+		BDD899AABBE9248708A7D7AD /* NagCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NagCore;
+		};
+		C3FEFC69DB0B36453AFC2F80 /* NagCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NagCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = C28573022B4A67500B2C4905 /* Project object */;
+}
