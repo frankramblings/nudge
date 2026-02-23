@@ -106,6 +106,124 @@ final class NagEngineTests: XCTestCase {
     XCTAssertEqual(remindersRepository.completedReminderIDs, ["r1"])
     XCTAssertTrue(sessionStore.stoppedReminderIDs.contains("r1"))
   }
+
+  func testHandleSnoozePausesSession() async throws {
+    let now = Date(timeIntervalSince1970: 1_700_100_000)
+    let remindersRepository = MockRemindersRepository(reminders: [])
+    let sessionStore = InMemoryNagSessionStore()
+    let notificationClient = MockNotificationClient()
+    let policyStore = StubNagPolicyStore()
+
+    try sessionStore.save(
+      NagSession(
+        reminderID: "r1",
+        reminderTitle: "Water plants",
+        listTitle: "Home",
+        dueDate: now.addingTimeInterval(-300),
+        policyEnabled: true,
+        intervalMinutes: 10,
+        nagCount: 2,
+        snoozeUntil: nil,
+        lastNagAt: nil,
+        stoppedAt: nil,
+        nextEligibleAt: nil
+      )
+    )
+
+    let engine = NagEngine(
+      remindersRepository: remindersRepository,
+      policyStore: policyStore,
+      sessionStore: sessionStore,
+      notificationClient: notificationClient
+    )
+
+    try await engine.handleNotificationAction(
+      NotificationActionIDs.snooze(minutes: 15),
+      reminderID: "r1",
+      now: now
+    )
+
+    let session = sessionStore.session(for: "r1")!
+    XCTAssertNotNil(session.snoozeUntil)
+    XCTAssertEqual(session.snoozeUntil!.timeIntervalSince(now), 900, accuracy: 1)
+    XCTAssertEqual(session.nextEligibleAt, session.snoozeUntil)
+  }
+
+  func testHandleStopNaggingStopsSessionOnly() async throws {
+    let now = Date(timeIntervalSince1970: 1_700_100_000)
+    let remindersRepository = MockRemindersRepository(reminders: [])
+    let sessionStore = InMemoryNagSessionStore()
+    let notificationClient = MockNotificationClient()
+    let policyStore = StubNagPolicyStore()
+
+    try sessionStore.save(
+      NagSession(
+        reminderID: "r1",
+        reminderTitle: "Water plants",
+        listTitle: "Home",
+        dueDate: now.addingTimeInterval(-300),
+        policyEnabled: true,
+        intervalMinutes: 10,
+        nagCount: 3,
+        snoozeUntil: nil,
+        lastNagAt: nil,
+        stoppedAt: nil,
+        nextEligibleAt: nil
+      )
+    )
+
+    let engine = NagEngine(
+      remindersRepository: remindersRepository,
+      policyStore: policyStore,
+      sessionStore: sessionStore,
+      notificationClient: notificationClient
+    )
+
+    try await engine.handleNotificationAction(
+      NotificationActionIDs.stopNagging,
+      reminderID: "r1",
+      now: now
+    )
+
+    XCTAssertTrue(sessionStore.stoppedReminderIDs.contains("r1"))
+    XCTAssertTrue(remindersRepository.completedReminderIDs.isEmpty, "Stop nagging should NOT complete the reminder")
+  }
+
+  func testReplenishScheduleRespectsPerListMode() async throws {
+    let now = Date(timeIntervalSince1970: 1_700_100_000)
+    let workReminder = ReminderItem(
+      id: "r1", title: "Work Task", notes: nil,
+      dueDate: now.addingTimeInterval(-300), isCompleted: false,
+      isFlagged: false, priority: 0,
+      listID: "work", listTitle: "Work", hasTimeComponent: true
+    )
+    let homeReminder = ReminderItem(
+      id: "r2", title: "Home Task", notes: nil,
+      dueDate: now.addingTimeInterval(-300), isCompleted: false,
+      isFlagged: false, priority: 0,
+      listID: "home", listTitle: "Home", hasTimeComponent: true
+    )
+
+    let remindersRepository = MockRemindersRepository(reminders: [workReminder, homeReminder])
+    let sessionStore = InMemoryNagSessionStore()
+    let notificationClient = MockNotificationClient()
+    let policyStore = StubNagPolicyStore(
+      globalPolicy: NagPolicy(nagMode: .perList, nagEnabledListIDs: ["work"])
+    )
+
+    let engine = NagEngine(
+      remindersRepository: remindersRepository,
+      policyStore: policyStore,
+      sessionStore: sessionStore,
+      notificationClient: notificationClient
+    )
+
+    let decision = try await engine.replenishSchedule(now: now, perSessionCap: 2, globalCap: 10)
+
+    XCTAssertEqual(decision.startedSessions.count, 1)
+    XCTAssertEqual(decision.startedSessions.first?.reminderID, "r1")
+    XCTAssertTrue(decision.scheduled.allSatisfy { $0.reminderID == "r1" })
+  }
 }
 
 @MainActor
