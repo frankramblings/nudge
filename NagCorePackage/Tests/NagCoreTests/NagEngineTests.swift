@@ -110,18 +110,22 @@ final class NagEngineTests: XCTestCase {
 
 @MainActor
 private final class StubNagPolicyStore: NagPolicyStore {
-  func globalPolicy() -> NagPolicy {
-    .default
+  var globalPolicyValue: NagPolicy
+  var perReminderPolicies: [String: NagPolicy] = [:]
+
+  init(globalPolicy: NagPolicy = NagPolicy(nagEnabledListIDs: ["list-1"])) {
+    self.globalPolicyValue = globalPolicy
   }
 
-  func policy(for reminderID: String) -> NagPolicy? {
-    nil
+  func globalPolicy() -> NagPolicy { globalPolicyValue }
+  func policy(for reminderID: String) -> NagPolicy? { perReminderPolicies[reminderID] }
+  func allPoliciesByReminderID() -> [String: NagPolicy] { perReminderPolicies }
+  func save(_ policy: NagPolicy, for reminderID: String?) throws {
+    if let id = reminderID {
+      perReminderPolicies[id] = policy
+    } else {
+      globalPolicyValue = policy
+    }
   }
-
-  func allPoliciesByReminderID() -> [String: NagPolicy] {
-    [:]
-  }
-
-  func save(_ policy: NagPolicy, for reminderID: String?) throws {}
-  func deletePolicy(for reminderID: String) throws {}
+  func deletePolicy(for reminderID: String) throws { perReminderPolicies[reminderID] = nil }
 }

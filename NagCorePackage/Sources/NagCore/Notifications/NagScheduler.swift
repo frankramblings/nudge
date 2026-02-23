@@ -21,11 +21,20 @@ public struct NagScheduler {
     var candidates: [ScheduledNag] = []
 
     for reminder in reminders {
-      let policy = policies[reminder.id] ?? globalPolicy
+      let perReminderPolicy = policies[reminder.id]
+      let policy = perReminderPolicy ?? globalPolicy
       let effectiveDue = effectiveDueDate(for: reminder, policy: policy, now: now)
       let priorSession = existingByID[reminder.id]
 
-      guard let due = effectiveDue, !reminder.isCompleted, policy.isEnabled, due <= now else {
+      let isNagEnabled: Bool
+      switch globalPolicy.nagMode {
+      case .perReminder:
+        isNagEnabled = perReminderPolicy?.isEnabled ?? false
+      case .perList:
+        isNagEnabled = perReminderPolicy?.isEnabled ?? globalPolicy.nagEnabledListIDs.contains(reminder.listID)
+      }
+
+      guard let due = effectiveDue, !reminder.isCompleted, isNagEnabled, due <= now else {
         if priorSession != nil {
           stopped.insert(reminder.id)
         }

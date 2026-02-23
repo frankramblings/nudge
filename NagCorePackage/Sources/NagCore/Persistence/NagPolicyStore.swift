@@ -16,6 +16,8 @@ public final class NagPolicyRecord {
   public var repeatAtLeast: Int
   public var repeatIndefinitelyModeRaw: String
   public var snoozePresetMinutesRaw: String
+  public var nagModeRaw: String = "perList"
+  public var nagEnabledListIDsRaw: String = ""
 
   public init(
     key: String,
@@ -30,7 +32,9 @@ public final class NagPolicyRecord {
     dateOnlyDueHour: Int,
     repeatAtLeast: Int,
     repeatIndefinitelyModeRaw: String,
-    snoozePresetMinutesRaw: String
+    snoozePresetMinutesRaw: String,
+    nagModeRaw: String = "perList",
+    nagEnabledListIDsRaw: String = ""
   ) {
     self.key = key
     self.isEnabled = isEnabled
@@ -45,6 +49,8 @@ public final class NagPolicyRecord {
     self.repeatAtLeast = repeatAtLeast
     self.repeatIndefinitelyModeRaw = repeatIndefinitelyModeRaw
     self.snoozePresetMinutesRaw = snoozePresetMinutesRaw
+    self.nagModeRaw = nagModeRaw
+    self.nagEnabledListIDsRaw = nagEnabledListIDsRaw
   }
 }
 
@@ -112,7 +118,9 @@ public final class SwiftDataNagPolicyStore: NagPolicyStore {
         dateOnlyDueHour: policy.dateOnlyDueHour,
         repeatAtLeast: policy.repeatAtLeast,
         repeatIndefinitelyModeRaw: policy.repeatIndefinitelyMode.rawValue,
-        snoozePresetMinutesRaw: encode(minutes: policy.snoozePresetMinutes)
+        snoozePresetMinutesRaw: encode(minutes: policy.snoozePresetMinutes),
+        nagModeRaw: policy.nagMode.rawValue,
+        nagEnabledListIDsRaw: policy.nagEnabledListIDs.sorted().joined(separator: ",")
       )
       context.insert(record)
     }
@@ -147,6 +155,8 @@ public final class SwiftDataNagPolicyStore: NagPolicyStore {
     record.repeatAtLeast = policy.repeatAtLeast
     record.repeatIndefinitelyModeRaw = policy.repeatIndefinitelyMode.rawValue
     record.snoozePresetMinutesRaw = encode(minutes: policy.snoozePresetMinutes)
+    record.nagModeRaw = policy.nagMode.rawValue
+    record.nagEnabledListIDsRaw = policy.nagEnabledListIDs.sorted().joined(separator: ",")
   }
 
   private func decode(record: NagPolicyRecord) -> NagPolicy {
@@ -162,7 +172,9 @@ public final class SwiftDataNagPolicyStore: NagPolicyStore {
       dateOnlyDueHour: record.dateOnlyDueHour,
       repeatAtLeast: record.repeatAtLeast,
       repeatIndefinitelyMode: RepeatIndefinitelyMode(rawValue: record.repeatIndefinitelyModeRaw) ?? .whenPossible,
-      snoozePresetMinutes: decodeMinutes(raw: record.snoozePresetMinutesRaw)
+      snoozePresetMinutes: decodeMinutes(raw: record.snoozePresetMinutesRaw),
+      nagMode: NagMode(rawValue: record.nagModeRaw) ?? .perList,
+      nagEnabledListIDs: Set(record.nagEnabledListIDsRaw.split(separator: ",").map(String.init))
     )
   }
 

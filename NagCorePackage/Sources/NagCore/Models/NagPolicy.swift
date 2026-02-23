@@ -6,6 +6,11 @@ public enum RepeatIndefinitelyMode: String, CaseIterable, Codable, Sendable {
   case always
 }
 
+public enum NagMode: String, CaseIterable, Codable, Sendable {
+  case perReminder
+  case perList
+}
+
 public struct NagPolicy: Equatable, Codable, Sendable {
   public var isEnabled: Bool
   public var intervalMinutes: Int
@@ -19,6 +24,8 @@ public struct NagPolicy: Equatable, Codable, Sendable {
   public var repeatAtLeast: Int
   public var repeatIndefinitelyMode: RepeatIndefinitelyMode
   public var snoozePresetMinutes: [Int]
+  public var nagMode: NagMode
+  public var nagEnabledListIDs: Set<String>
 
   public init(
     isEnabled: Bool = true,
@@ -32,7 +39,9 @@ public struct NagPolicy: Equatable, Codable, Sendable {
     dateOnlyDueHour: Int = 9,
     repeatAtLeast: Int = 10,
     repeatIndefinitelyMode: RepeatIndefinitelyMode = .whenPossible,
-    snoozePresetMinutes: [Int] = [5, 10, 20, 60]
+    snoozePresetMinutes: [Int] = [5, 10, 20, 60],
+    nagMode: NagMode = .perList,
+    nagEnabledListIDs: Set<String> = []
   ) {
     self.isEnabled = isEnabled
     self.intervalMinutes = intervalMinutes
@@ -46,6 +55,8 @@ public struct NagPolicy: Equatable, Codable, Sendable {
     self.repeatAtLeast = repeatAtLeast
     self.repeatIndefinitelyMode = repeatIndefinitelyMode
     self.snoozePresetMinutes = snoozePresetMinutes
+    self.nagMode = nagMode
+    self.nagEnabledListIDs = nagEnabledListIDs
   }
 
   public var effectiveIntervalMinutes: Int {

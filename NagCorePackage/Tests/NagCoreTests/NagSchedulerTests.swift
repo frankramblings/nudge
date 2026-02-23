@@ -21,7 +21,7 @@ final class NagSchedulerTests: XCTestCase {
       reminders: [reminder],
       existingSessions: [],
       policies: [:],
-      globalPolicy: .default,
+      globalPolicy: NagPolicy(nagEnabledListIDs: ["list-1"]),
       now: now,
       perSessionCap: 1
     )
@@ -63,7 +63,7 @@ final class NagSchedulerTests: XCTestCase {
       reminders: [reminder],
       existingSessions: [existing],
       policies: [:],
-      globalPolicy: .default,
+      globalPolicy: NagPolicy(nagEnabledListIDs: ["list-1"]),
       now: now
     )
 
@@ -104,7 +104,7 @@ final class NagSchedulerTests: XCTestCase {
       reminders: [reminder],
       existingSessions: [snoozedSession],
       policies: [:],
-      globalPolicy: .default,
+      globalPolicy: NagPolicy(nagEnabledListIDs: ["list-1"]),
       now: now
     )
     XCTAssertTrue(pausedDecision.scheduled.isEmpty)
@@ -113,7 +113,7 @@ final class NagSchedulerTests: XCTestCase {
       reminders: [reminder],
       existingSessions: [snoozedSession],
       policies: [:],
-      globalPolicy: .default,
+      globalPolicy: NagPolicy(nagEnabledListIDs: ["list-1"]),
       now: now.addingTimeInterval(700)
     )
     XCTAssertFalse(resumedDecision.scheduled.isEmpty)
@@ -138,7 +138,8 @@ final class NagSchedulerTests: XCTestCase {
       isEnabled: true,
       intervalMinutes: 10,
       escalationAfterNags: 3,
-      escalationIntervalMinutes: 2
+      escalationIntervalMinutes: 2,
+      nagEnabledListIDs: ["list-1"]
     )
 
     // Session with nagCount below threshold — should use normal interval
@@ -205,6 +206,76 @@ final class NagSchedulerTests: XCTestCase {
     }
   }
 
+  func testPerReminderModeOnlyNagsOptedInReminders() {
+    let now = Date(timeIntervalSince1970: 1_700_000_000)
+    let opted = ReminderItem(
+      id: "r1", title: "Opted In", notes: nil,
+      dueDate: now.addingTimeInterval(-300), isCompleted: false,
+      isFlagged: false, priority: 0,
+      listID: "list-1", listTitle: "Work", hasTimeComponent: true
+    )
+    let notOpted = ReminderItem(
+      id: "r2", title: "Not Opted In", notes: nil,
+      dueDate: now.addingTimeInterval(-300), isCompleted: false,
+      isFlagged: false, priority: 0,
+      listID: "list-1", listTitle: "Work", hasTimeComponent: true
+    )
+
+    let globalPolicy = NagPolicy(isEnabled: true, nagMode: .perReminder)
+    let perReminder: [String: NagPolicy] = [
+      "r1": NagPolicy(isEnabled: true)
+    ]
+
+    let scheduler = NagScheduler()
+    let decision = scheduler.buildSchedule(
+      reminders: [opted, notOpted],
+      existingSessions: [],
+      policies: perReminder,
+      globalPolicy: globalPolicy,
+      now: now,
+      perSessionCap: 1
+    )
+
+    XCTAssertEqual(decision.startedSessions.count, 1)
+    XCTAssertEqual(decision.startedSessions.first?.reminderID, "r1")
+    XCTAssertTrue(decision.scheduled.allSatisfy { $0.reminderID == "r1" })
+  }
+
+  func testPerListModeNagsRemindersInEnabledLists() {
+    let now = Date(timeIntervalSince1970: 1_700_000_000)
+    let inEnabledList = ReminderItem(
+      id: "r1", title: "Work Task", notes: nil,
+      dueDate: now.addingTimeInterval(-300), isCompleted: false,
+      isFlagged: false, priority: 0,
+      listID: "work", listTitle: "Work", hasTimeComponent: true
+    )
+    let inDisabledList = ReminderItem(
+      id: "r2", title: "Home Task", notes: nil,
+      dueDate: now.addingTimeInterval(-300), isCompleted: false,
+      isFlagged: false, priority: 0,
+      listID: "home", listTitle: "Home", hasTimeComponent: true
+    )
+
+    let globalPolicy = NagPolicy(
+      isEnabled: true,
+      nagMode: .perList,
+      nagEnabledListIDs: ["work"]
+    )
+
+    let scheduler = NagScheduler()
+    let decision = scheduler.buildSchedule(
+      reminders: [inEnabledList, inDisabledList],
+      existingSessions: [],
+      policies: [:],
+      globalPolicy: globalPolicy,
+      now: now,
+      perSessionCap: 1
+    )
+
+    XCTAssertEqual(decision.startedSessions.count, 1)
+    XCTAssertEqual(decision.startedSessions.first?.reminderID, "r1")
+  }
+
   func testRollingSchedulingRespectsSessionAndGlobalCaps() {
     let now = Date(timeIntervalSince1970: 1_700_000_000)
     let reminders: [ReminderItem] = (0..<20).map { index in
@@ -227,7 +298,7 @@ final class NagSchedulerTests: XCTestCase {
       reminders: reminders,
       existingSessions: [],
       policies: [:],
-      globalPolicy: .default,
+      globalPolicy: NagPolicy(nagEnabledListIDs: ["list-1"]),
       now: now,
       perSessionCap: 5,
       globalCap: 40
