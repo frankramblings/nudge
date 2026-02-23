@@ -27,16 +27,33 @@ public struct PolicySettingsView: View {
         }
       }
 
-      Section("Quiet Hours") {
-        Toggle("Enable Quiet Hours", isOn: $policy.quietHoursEnabled)
+      Section("Escalation") {
+        Toggle("Enable Escalation", isOn: Binding(
+          get: { policy.escalationAfterNags != nil },
+          set: { policy.escalationAfterNags = $0 ? 5 : nil; policy.escalationIntervalMinutes = $0 ? 2 : nil }
+        ))
 
-        if policy.quietHoursEnabled {
-          Stepper(value: $policy.quietHoursStartHour, in: 0...23) {
-            Text("Start: \(policy.quietHoursStartHour):00")
+        if let _ = policy.escalationAfterNags {
+          Stepper(value: Binding(
+            get: { policy.escalationAfterNags ?? 5 },
+            set: { policy.escalationAfterNags = $0 }
+          ), in: 1...50) {
+            Text("After \(policy.escalationAfterNags ?? 5) nags")
           }
-          Stepper(value: $policy.quietHoursEndHour, in: 0...23) {
-            Text("End: \(policy.quietHoursEndHour):00")
+
+          Stepper(value: Binding(
+            get: { policy.escalationIntervalMinutes ?? 2 },
+            set: { policy.escalationIntervalMinutes = $0 }
+          ), in: 1...60) {
+            Text("Escalated interval: \(policy.escalationIntervalMinutes ?? 2) min")
           }
+        }
+      }
+
+      Section("Nag Mode") {
+        Picker("Mode", selection: $policy.nagMode) {
+          Text("Per Reminder").tag(NagMode.perReminder)
+          Text("Per List").tag(NagMode.perList)
         }
       }
 

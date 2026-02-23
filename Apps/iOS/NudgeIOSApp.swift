@@ -37,6 +37,7 @@ private final class IOSAppDependencies: ObservableObject {
 @main
 struct NudgeIOSApp: App {
   @StateObject private var dependencies = IOSAppDependencies()
+  @Environment(\.scenePhase) private var scenePhase
 
   var body: some Scene {
     WindowGroup {
@@ -55,6 +56,13 @@ struct NudgeIOSApp: App {
       }
       .onOpenURL { url in
         dependencies.appController.handle(url: url)
+      }
+      .onChange(of: scenePhase) { _, newPhase in
+        if newPhase == .active {
+          Task {
+            await dependencies.appController.replenishSchedule()
+          }
+        }
       }
     }
   }
