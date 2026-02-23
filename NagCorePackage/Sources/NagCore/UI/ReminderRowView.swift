@@ -2,17 +2,23 @@ import SwiftUI
 
 public struct ReminderRowView: View {
   private let reminder: ReminderItem
+  private let isNagging: Bool?
   private let onToggleComplete: () -> Void
   private let onQuickSnooze: () -> Void
+  private let onToggleNag: (() -> Void)?
 
   public init(
     reminder: ReminderItem,
+    isNagging: Bool? = nil,
     onToggleComplete: @escaping () -> Void,
-    onQuickSnooze: @escaping () -> Void
+    onQuickSnooze: @escaping () -> Void,
+    onToggleNag: (() -> Void)? = nil
   ) {
     self.reminder = reminder
+    self.isNagging = isNagging
     self.onToggleComplete = onToggleComplete
     self.onQuickSnooze = onQuickSnooze
+    self.onToggleNag = onToggleNag
   }
 
   public var body: some View {
@@ -50,6 +56,14 @@ public struct ReminderRowView: View {
       }
 
       Spacer(minLength: 0)
+
+      if let isNagging, let onToggleNag {
+        Button(action: onToggleNag) {
+          Image(systemName: isNagging ? "bell.fill" : "bell.slash")
+            .foregroundStyle(isNagging ? .orange : .secondary)
+        }
+        .buttonStyle(.plain)
+      }
 
       Button("Snooze", action: onQuickSnooze)
         .buttonStyle(.bordered)

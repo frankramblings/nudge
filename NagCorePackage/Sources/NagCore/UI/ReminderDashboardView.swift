@@ -42,6 +42,7 @@ public struct ReminderDashboardView: View {
 
         ReminderListView(
           reminders: viewModel.visibleReminders,
+          nagStates: viewModel.nagPolicy.nagMode == .perReminder ? viewModel.nagStates : [:],
           onToggleCompletion: { reminder in
             Task {
               await appController.markDone(reminderID: reminder.id)
@@ -53,7 +54,10 @@ public struct ReminderDashboardView: View {
           },
           onDelete: { reminder in
             Task { await viewModel.delete(reminder) }
-          }
+          },
+          onToggleNag: viewModel.nagPolicy.nagMode == .perReminder ? { reminder in
+            viewModel.toggleNag(for: reminder)
+          } : nil
         )
       }
       .padding(.horizontal)
@@ -106,7 +110,7 @@ public struct ReminderDashboardView: View {
       }
       .sheet(isPresented: $showSettings) {
         NavigationStack {
-          PolicySettingsView(policy: $viewModel.nagPolicy)
+          PolicySettingsView(policy: $viewModel.nagPolicy, lists: viewModel.lists)
             .navigationTitle("Nag Settings")
             .toolbar {
               ToolbarItem {

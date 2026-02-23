@@ -2,9 +2,11 @@ import SwiftUI
 
 public struct PolicySettingsView: View {
   @Binding private var policy: NagPolicy
+  private let lists: [ReminderList]
 
-  public init(policy: Binding<NagPolicy>) {
+  public init(policy: Binding<NagPolicy>, lists: [ReminderList] = []) {
     _policy = policy
+    self.lists = lists
   }
 
   public var body: some View {
@@ -54,6 +56,23 @@ public struct PolicySettingsView: View {
         Picker("Mode", selection: $policy.nagMode) {
           Text("Per Reminder").tag(NagMode.perReminder)
           Text("Per List").tag(NagMode.perList)
+        }
+      }
+
+      if policy.nagMode == .perList && !lists.isEmpty {
+        Section("Nag-Enabled Lists") {
+          ForEach(lists) { list in
+            Toggle(list.title, isOn: Binding(
+              get: { policy.nagEnabledListIDs.contains(list.id) },
+              set: { enabled in
+                if enabled {
+                  policy.nagEnabledListIDs.insert(list.id)
+                } else {
+                  policy.nagEnabledListIDs.remove(list.id)
+                }
+              }
+            ))
+          }
         }
       }
 

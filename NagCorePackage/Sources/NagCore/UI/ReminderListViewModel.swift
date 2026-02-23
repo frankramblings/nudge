@@ -8,6 +8,8 @@ public final class ReminderListViewModel: ObservableObject {
   @Published public var isLoading = false
   @Published public var errorMessage: String?
   @Published public var nagPolicy: NagPolicy = .default
+  @Published public private(set) var nagStates: [String: Bool] = [:]
+  @Published public private(set) var lists: [ReminderList] = []
 
   private let remindersRepository: any RemindersRepository
   private let policyStore: (any NagPolicyStore)?
@@ -49,10 +51,30 @@ public final class ReminderListViewModel: ObservableObject {
 
     do {
       reminders = try await remindersRepository.fetchReminders(in: selectedSmartList)
+      lists = try await remindersRepository.fetchLists()
       errorMessage = nil
     } catch {
       errorMessage = error.localizedDescription
     }
+    loadNagStates()
+  }
+
+  public func loadNagStates() {
+    guard nagPolicy.nagMode == .perReminder, let store = policyStore else {
+      nagStates = [:]
+      return
+    }
+    let policies = store.allPoliciesByReminderID()
+    nagStates = policies.mapValues(\.isEnabled)
+  }
+
+  public func toggleNag(for reminder: ReminderItem) {
+    guard let store = policyStore else { return }
+    let current = nagStates[reminder.id] ?? false
+    var policy = store.policy(for: reminder.id) ?? nagPolicy
+    policy.isEnabled = !current
+    try? store.save(policy, for: reminder.id)
+    nagStates[reminder.id] = !current
   }
 
   public func addReminder(title: String, listID: String = "inbox") async {
