@@ -2,16 +2,22 @@ import SwiftUI
 
 public struct NagScreenView: View {
   private let title: String
-  private let onSnooze: () -> Void
+  private let snoozePresets: [Int]
+  private let onSnooze: (Int) -> Void
+  private let onMarkDone: () -> Void
   private let onStop: () -> Void
 
   public init(
     title: String,
-    onSnooze: @escaping () -> Void,
+    snoozePresets: [Int] = [5, 10, 20],
+    onSnooze: @escaping (Int) -> Void,
+    onMarkDone: @escaping () -> Void = {},
     onStop: @escaping () -> Void
   ) {
     self.title = title
+    self.snoozePresets = snoozePresets
     self.onSnooze = onSnooze
+    self.onMarkDone = onMarkDone
     self.onStop = onStop
   }
 
@@ -34,8 +40,14 @@ public struct NagScreenView: View {
           .font(.largeTitle.weight(.bold))
           .multilineTextAlignment(.center)
 
-        Button("Snooze 10 Minutes", action: onSnooze)
-          .buttonStyle(.borderedProminent)
+        ForEach(snoozePresets, id: \.self) { minutes in
+          Button("Snooze \(minutes) Minutes") { onSnooze(minutes) }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+        }
+
+        Button("Mark Done", action: onMarkDone)
+          .buttonStyle(.bordered)
           .controlSize(.large)
 
         Button("Stop Nagging", role: .destructive, action: onStop)

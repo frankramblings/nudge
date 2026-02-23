@@ -75,6 +75,40 @@ public final class NagAppController: ObservableObject {
     }
   }
 
+  public func snooze(reminderID: String, minutes: Int) async {
+    do {
+      try await engine.handleNotificationAction(
+        NotificationActionIDs.snooze(minutes: minutes),
+        reminderID: reminderID
+      )
+      try await engine.replenishSchedule()
+    } catch {
+      lastErrorMessage = error.localizedDescription
+    }
+  }
+
+  public func markDone(reminderID: String) async {
+    do {
+      try await engine.handleNotificationAction(
+        NotificationActionIDs.markDone,
+        reminderID: reminderID
+      )
+    } catch {
+      lastErrorMessage = error.localizedDescription
+    }
+  }
+
+  public func stopNagging(reminderID: String) async {
+    do {
+      try await engine.handleNotificationAction(
+        NotificationActionIDs.stopNagging,
+        reminderID: reminderID
+      )
+    } catch {
+      lastErrorMessage = error.localizedDescription
+    }
+  }
+
   public func dismissNagScreen() {
     nagScreenReminderID = nil
   }

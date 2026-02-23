@@ -2,9 +2,9 @@ import SwiftUI
 
 public struct ReminderDashboardView: View {
   @StateObject private var viewModel: ReminderListViewModel
+  @EnvironmentObject private var appController: NagAppController
   @State private var quickSnoozeReminder: ReminderItem?
   @State private var showSettings = false
-  @State private var showNagScreen = false
 
   private let debugNotificationsEnabled: Bool
 
@@ -43,7 +43,10 @@ public struct ReminderDashboardView: View {
         ReminderListView(
           reminders: viewModel.visibleReminders,
           onToggleCompletion: { reminder in
-            Task { await viewModel.toggleCompletion(for: reminder) }
+            Task {
+              await appController.markDone(reminderID: reminder.id)
+              await viewModel.refresh()
+            }
           },
           onQuickSnooze: { reminder in
             quickSnoozeReminder = reminder
@@ -62,14 +65,6 @@ public struct ReminderDashboardView: View {
             showSettings = true
           }
         }
-
-        ToolbarItem {
-          Button {
-            Task { await viewModel.addReminder(title: "New Reminder") }
-          } label: {
-            Image(systemName: "plus")
-          }
-        }
       }
       .overlay {
         if viewModel.isLoading {
@@ -80,23 +75,31 @@ public struct ReminderDashboardView: View {
         await viewModel.refresh()
       }
       .onChange(of: viewModel.selectedSmartList) { _, _ in
-        Task {
-          await viewModel.refresh()
-        }
+        Task { await viewModel.refresh() }
       }
       .sheet(item: $quickSnoozeReminder) { reminder in
         QuickSnoozeView(
           title: reminder.title,
           presets: viewModel.nagPolicy.snoozePresetMinutes,
           onSnooze: { minutes in
-            Task { await viewModel.snooze(reminder, minutes: minutes) }
+            Task {
+              await appController.snooze(reminderID: reminder.id, minutes: minutes)
+              await viewModel.refresh()
+            }
             quickSnoozeReminder = nil
           },
           onMarkDone: {
-            Task { await viewModel.toggleCompletion(for: reminder) }
+            Task {
+              await appController.markDone(reminderID: reminder.id)
+              await viewModel.refresh()
+            }
             quickSnoozeReminder = nil
           },
           onStopNagging: {
+            Task {
+              await appController.stopNagging(reminderID: reminder.id)
+              await viewModel.refresh()
+            }
             quickSnoozeReminder = nil
           }
         )
@@ -115,13 +118,21 @@ public struct ReminderDashboardView: View {
             }
         }
       }
-      .sheet(isPresented: $showNagScreen) {
-        NagScreenView(
-          title: "Debug Reminder",
-          onSnooze: { showNagScreen = false },
-          onStop: { showNagScreen = false }
-        )
+      #if os(iOS)
+      .fullScreenCover(isPresented: Binding(
+        get: { appController.nagScreenReminderID != nil },
+        set: { if !$0 { appController.dismissNagScreen() } }
+      )) {
+        nagScreenContent
       }
+      #else
+      .sheet(isPresented: Binding(
+        get: { appController.nagScreenReminderID != nil },
+        set: { if !$0 { appController.dismissNagScreen() } }
+      )) {
+        nagScreenContent
+      }
+      #endif
       .safeAreaInset(edge: .bottom) {
         if debugNotificationsEnabled {
           debugPanel
@@ -130,10 +141,50 @@ public struct ReminderDashboardView: View {
     }
   }
 
+  @ViewBuilder
+  private var nagScreenContent: some View {
+    if let reminderID = appController.nagScreenReminderID,
+       let reminder = viewModel.reminders.first(where: { $0.id == reminderID }) {
+      NagScreenView(
+        title: reminder.title,
+        snoozePresets: viewModel.nagPolicy.snoozePresetMinutes,
+        onSnooze: { minutes in
+          Task {
+            await appController.snooze(reminderID: reminderID, minutes: minutes)
+            await viewModel.refresh()
+          }
+          appController.dismissNagScreen()
+        },
+        onMarkDone: {
+          Task {
+            await appController.markDone(reminderID: reminderID)
+            await viewModel.refresh()
+          }
+          appController.dismissNagScreen()
+        },
+        onStop: {
+          Task {
+            await appController.stopNagging(reminderID: reminderID)
+            await viewModel.refresh()
+          }
+          appController.dismissNagScreen()
+        }
+      )
+    } else {
+      NagScreenView(
+        title: "Reminder",
+        onSnooze: { _ in appController.dismissNagScreen() },
+        onStop: { appController.dismissNagScreen() }
+      )
+    }
+  }
+
   private var debugPanel: some View {
     HStack(spacing: 12) {
       Button("Simulate Nag") {
-        showNagScreen = true
+        if let first = viewModel.visibleReminders.first {
+          appController.handle(url: DeepLinkFactory.nagScreenURL(reminderID: first.id))
+        }
       }
       .buttonStyle(.borderedProminent)
       .accessibilityIdentifier("debug.simulateNagDelivery")
