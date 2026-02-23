@@ -10,14 +10,26 @@ public final class ReminderListViewModel: ObservableObject {
   @Published public var nagPolicy: NagPolicy = .default
 
   private let remindersRepository: any RemindersRepository
+  private let policyStore: (any NagPolicyStore)?
 
-  public init(remindersRepository: any RemindersRepository = MockRemindersRepository.sampleData()) {
+  public init(
+    remindersRepository: any RemindersRepository = MockRemindersRepository.sampleData(),
+    policyStore: (any NagPolicyStore)? = nil
+  ) {
     self.remindersRepository = remindersRepository
+    self.policyStore = policyStore
+    if let store = policyStore {
+      self.nagPolicy = store.globalPolicy()
+    }
     self.remindersRepository.setStoreChangedHandler { [weak self] in
       Task {
         await self?.refresh()
       }
     }
+  }
+
+  public func savePolicy() {
+    try? policyStore?.save(nagPolicy, for: nil)
   }
 
   public var visibleReminders: [ReminderItem] {

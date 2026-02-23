@@ -6,6 +6,7 @@ import SwiftUI
 private final class IOSAppDependencies: ObservableObject {
   let modelContainer: ModelContainer
   let remindersRepository: EventKitRemindersRepository
+  let policyStore: SwiftDataNagPolicyStore
   let appController: NagAppController
 
   init() {
@@ -18,6 +19,7 @@ private final class IOSAppDependencies: ObservableObject {
     remindersRepository = EventKitRemindersRepository()
 
     let policyStore = SwiftDataNagPolicyStore(context: modelContainer.mainContext)
+    self.policyStore = policyStore
     let sessionStore = SwiftDataNagSessionStore(context: modelContainer.mainContext)
     let notificationClient = UserNotificationClient()
 
@@ -39,7 +41,10 @@ struct NudgeIOSApp: App {
   var body: some Scene {
     WindowGroup {
       NavigationStack {
-        NudgeRootView(repository: dependencies.remindersRepository)
+        NudgeRootView(
+          repository: dependencies.remindersRepository,
+          policyStore: dependencies.policyStore
+        )
       }
       .environmentObject(dependencies.appController)
       .modelContainer(dependencies.modelContainer)

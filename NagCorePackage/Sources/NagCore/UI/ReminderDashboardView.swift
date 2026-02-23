@@ -8,10 +8,14 @@ public struct ReminderDashboardView: View {
 
   private let debugNotificationsEnabled: Bool
 
-  public init(repository: (any RemindersRepository)? = nil) {
+  public init(
+    repository: (any RemindersRepository)? = nil,
+    policyStore: (any NagPolicyStore)? = nil
+  ) {
     _viewModel = StateObject(
       wrappedValue: ReminderListViewModel(
-        remindersRepository: repository ?? MockRemindersRepository.sampleData()
+        remindersRepository: repository ?? MockRemindersRepository.sampleData(),
+        policyStore: policyStore
       )
     )
 
@@ -104,6 +108,7 @@ public struct ReminderDashboardView: View {
             .toolbar {
               ToolbarItem {
                 Button("Done") {
+                  viewModel.savePolicy()
                   showSettings = false
                 }
               }
