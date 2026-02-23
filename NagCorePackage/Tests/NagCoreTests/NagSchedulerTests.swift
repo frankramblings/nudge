@@ -119,6 +119,92 @@ final class NagSchedulerTests: XCTestCase {
     XCTAssertFalse(resumedDecision.scheduled.isEmpty)
   }
 
+  func testEscalationUsesShortIntervalAfterNagCountThreshold() {
+    let now = Date(timeIntervalSince1970: 1_700_000_000)
+    let reminder = ReminderItem(
+      id: "r1",
+      title: "Take medications",
+      notes: nil,
+      dueDate: now.addingTimeInterval(-300),
+      isCompleted: false,
+      isFlagged: false,
+      priority: 0,
+      listID: "list-1",
+      listTitle: "Reminders",
+      hasTimeComponent: true
+    )
+
+    let escalatingPolicy = NagPolicy(
+      isEnabled: true,
+      intervalMinutes: 10,
+      escalationAfterNags: 3,
+      escalationIntervalMinutes: 2
+    )
+
+    // Session with nagCount below threshold — should use normal interval
+    let belowThreshold = NagSession(
+      reminderID: "r1",
+      reminderTitle: "Take medications",
+      listTitle: "Reminders",
+      dueDate: now.addingTimeInterval(-300),
+      policyEnabled: true,
+      intervalMinutes: 10,
+      nagCount: 2,
+      snoozeUntil: nil,
+      lastNagAt: nil,
+      stoppedAt: nil,
+      nextEligibleAt: nil
+    )
+
+    let scheduler = NagScheduler()
+    let normalDecision = scheduler.buildSchedule(
+      reminders: [reminder],
+      existingSessions: [belowThreshold],
+      policies: [:],
+      globalPolicy: escalatingPolicy,
+      now: now,
+      perSessionCap: 2
+    )
+
+    // Verify normal 10-min intervals
+    XCTAssertEqual(normalDecision.scheduled.count, 2)
+    if normalDecision.scheduled.count == 2 {
+      let gap = normalDecision.scheduled[1].fireDate.timeIntervalSince(normalDecision.scheduled[0].fireDate)
+      XCTAssertEqual(gap, 600, accuracy: 1, "Should use 10-min interval below threshold")
+    }
+
+    // Session with nagCount at threshold — should use escalated interval
+    let atThreshold = NagSession(
+      reminderID: "r1",
+      reminderTitle: "Take medications",
+      listTitle: "Reminders",
+      dueDate: now.addingTimeInterval(-300),
+      policyEnabled: true,
+      intervalMinutes: 10,
+      nagCount: 3,
+      snoozeUntil: nil,
+      lastNagAt: nil,
+      stoppedAt: nil,
+      nextEligibleAt: nil
+    )
+
+    let escalatedDecision = scheduler.buildSchedule(
+      reminders: [reminder],
+      existingSessions: [atThreshold],
+      policies: [:],
+      globalPolicy: escalatingPolicy,
+      now: now,
+      perSessionCap: 2
+    )
+
+    // Verify escalated 2-min intervals
+    XCTAssertEqual(escalatedDecision.scheduled.count, 2)
+    if escalatedDecision.scheduled.count == 2 {
+      let gap = escalatedDecision.scheduled[1].fireDate.timeIntervalSince(escalatedDecision.scheduled[0].fireDate)
+      XCTAssertEqual(gap, 120, accuracy: 1, "Should use 2-min interval at/above threshold")
+    }
+  }
+
   func testRollingSchedulingRespectsSessionAndGlobalCaps() {
     let now = Date(timeIntervalSince1970: 1_700_000_000)
     let reminders: [ReminderItem] = (0..<20).map { index in

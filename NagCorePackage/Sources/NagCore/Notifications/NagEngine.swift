@@ -48,8 +48,25 @@ public final class NagEngine {
       globalCap: globalCap
     )
 
-    try sessionStore.save(decision.startedSessions)
-    try sessionStore.save(decision.updatedSessions)
+    // Update nag counts based on what was actually scheduled (after global cap)
+    let scheduledByReminder = Dictionary(grouping: decision.scheduled, by: \.reminderID)
+
+    var startedSessions = decision.startedSessions
+    for i in startedSessions.indices {
+      let count = scheduledByReminder[startedSessions[i].reminderID]?.count ?? 0
+      startedSessions[i].nagCount += count
+      if count > 0 { startedSessions[i].lastNagAt = now }
+    }
+
+    var updatedSessions = decision.updatedSessions
+    for i in updatedSessions.indices {
+      let count = scheduledByReminder[updatedSessions[i].reminderID]?.count ?? 0
+      updatedSessions[i].nagCount += count
+      if count > 0 { updatedSessions[i].lastNagAt = now }
+    }
+
+    try sessionStore.save(startedSessions)
+    try sessionStore.save(updatedSessions)
     for reminderID in decision.stoppedSessionIDs {
       try sessionStore.stopSession(reminderID: reminderID, at: now)
     }

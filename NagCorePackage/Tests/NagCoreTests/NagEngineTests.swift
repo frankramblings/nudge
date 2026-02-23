@@ -37,6 +37,40 @@ final class NagEngineTests: XCTestCase {
     XCTAssertEqual(notificationClient.scheduled.count, 2)
   }
 
+  func testReplenishScheduleIncrementsNagCount() async throws {
+    let now = Date(timeIntervalSince1970: 1_700_100_000)
+    let reminder = ReminderItem(
+      id: "r1",
+      title: "Water plants",
+      notes: nil,
+      dueDate: now.addingTimeInterval(-300),
+      isCompleted: false,
+      isFlagged: false,
+      priority: 0,
+      listID: "list-1",
+      listTitle: "Home",
+      hasTimeComponent: true
+    )
+
+    let remindersRepository = MockRemindersRepository(reminders: [reminder])
+    let sessionStore = InMemoryNagSessionStore()
+    let notificationClient = MockNotificationClient()
+    let policyStore = StubNagPolicyStore()
+
+    let engine = NagEngine(
+      remindersRepository: remindersRepository,
+      policyStore: policyStore,
+      sessionStore: sessionStore,
+      notificationClient: notificationClient
+    )
+
+    _ = try await engine.replenishSchedule(now: now, perSessionCap: 3, globalCap: 10)
+
+    let session = sessionStore.session(for: "r1")!
+    XCTAssertEqual(session.nagCount, 3, "nagCount should equal number of scheduled nags")
+    XCTAssertNotNil(session.lastNagAt, "lastNagAt should be set after scheduling")
+  }
+
   func testHandleMarkDoneStopsSessionAndCompletesReminder() async throws {
     let now = Date(timeIntervalSince1970: 1_700_100_000)
     let remindersRepository = MockRemindersRepository(reminders: [])
