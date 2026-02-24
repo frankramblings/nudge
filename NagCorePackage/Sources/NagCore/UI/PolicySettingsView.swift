@@ -2,18 +2,14 @@ import SwiftUI
 
 public struct PolicySettingsView: View {
   @Binding private var policy: NagPolicy
-  private let lists: [ReminderList]
 
-  public init(policy: Binding<NagPolicy>, lists: [ReminderList] = []) {
+  public init(policy: Binding<NagPolicy>) {
     _policy = policy
-    self.lists = lists
   }
 
   public var body: some View {
     Form {
-      Section("Repeating Alerts") {
-        Toggle("Enable Nagging", isOn: $policy.isEnabled)
-
+      Section("Default Nag Settings") {
         Stepper(value: $policy.intervalMinutes, in: 1...120) {
           Text("Interval: \(policy.intervalMinutes) min")
         }
@@ -29,7 +25,7 @@ public struct PolicySettingsView: View {
         }
       }
 
-      Section("Escalation") {
+      Section("Escalation Defaults") {
         Toggle("Enable Escalation", isOn: Binding(
           get: { policy.escalationAfterNags != nil },
           set: { policy.escalationAfterNags = $0 ? 5 : nil; policy.escalationIntervalMinutes = $0 ? 2 : nil }
@@ -48,30 +44,6 @@ public struct PolicySettingsView: View {
             set: { policy.escalationIntervalMinutes = $0 }
           ), in: 1...60) {
             Text("Escalated interval: \(policy.escalationIntervalMinutes ?? 2) min")
-          }
-        }
-      }
-
-      Section("Nag Mode") {
-        Picker("Mode", selection: $policy.nagMode) {
-          Text("Per Reminder").tag(NagMode.perReminder)
-          Text("Per List").tag(NagMode.perList)
-        }
-      }
-
-      if policy.nagMode == .perList && !lists.isEmpty {
-        Section("Nag-Enabled Lists") {
-          ForEach(lists) { list in
-            Toggle(list.title, isOn: Binding(
-              get: { policy.nagEnabledListIDs.contains(list.id) },
-              set: { enabled in
-                if enabled {
-                  policy.nagEnabledListIDs.insert(list.id)
-                } else {
-                  policy.nagEnabledListIDs.remove(list.id)
-                }
-              }
-            ))
           }
         }
       }
