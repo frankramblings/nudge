@@ -8,13 +8,17 @@ public struct InlineNagSettingsView: View {
   }
 
   public var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
+    VStack(spacing: 16) {
       Toggle("Nag enabled", isOn: $policy.isEnabled)
 
       if policy.isEnabled {
+        Divider()
+
         Stepper(value: $policy.intervalMinutes, in: 1...120) {
           Text("Every \(policy.intervalMinutes) min")
         }
+
+        Divider()
 
         Toggle("Escalate", isOn: Binding(
           get: { policy.escalationAfterNags != nil },

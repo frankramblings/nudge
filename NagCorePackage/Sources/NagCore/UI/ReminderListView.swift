@@ -47,9 +47,7 @@ public struct ReminderListView: View {
           onToggleComplete: { onToggleCompletion(reminder) },
           onQuickSnooze: { onQuickSnooze(reminder) },
           onTap: {
-            withAnimation(.easeInOut(duration: 0.25)) {
-              expandedReminderID = expandedReminderID == reminder.id ? nil : reminder.id
-            }
+            expandedReminderID = expandedReminderID == reminder.id ? nil : reminder.id
           },
           onSavePolicy: { onSavePolicy(reminder) }
         )

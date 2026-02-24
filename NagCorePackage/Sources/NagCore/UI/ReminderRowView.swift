@@ -31,8 +31,25 @@ public struct ReminderRowView: View {
   }
 
   public var body: some View {
-    VStack(alignment: .leading, spacing: 0) {
-      // Main row content
+    DisclosureGroup(isExpanded: Binding(
+      get: { isExpanded },
+      set: { _ in onTap() }
+    )) {
+      // Expanded settings
+      VStack(spacing: 0) {
+        InlineNagSettingsView(policy: $policy)
+          .onChange(of: policy) { _, _ in onSavePolicy() }
+          .padding(.top, 12)
+          .padding(.bottom, 16)
+
+        Button(action: onQuickSnooze) {
+          Label("Snooze", systemImage: "clock")
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bordered)
+        .controlSize(.regular)
+      }
+    } label: {
       HStack(spacing: 14) {
         Button(action: onToggleComplete) {
           Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
@@ -67,32 +84,7 @@ public struct ReminderRowView: View {
           .font(.subheadline)
           .foregroundStyle(isNagging ? .orange : .secondary.opacity(0.5))
       }
-      .padding(.vertical, 8)
-      .contentShape(Rectangle())
-      .onTapGesture(perform: onTap)
-
-      // Expanded settings
-      if isExpanded {
-        Divider()
-          .padding(.leading, 40)
-
-        InlineNagSettingsView(policy: $policy)
-          .onChange(of: policy) { _, _ in onSavePolicy() }
-          .padding(.leading, 40)
-          .padding(.vertical, 12)
-
-        HStack {
-          Spacer()
-          Button(action: onQuickSnooze) {
-            Label("Snooze", systemImage: "clock")
-          }
-          .buttonStyle(.bordered)
-          .controlSize(.small)
-          Spacer()
-        }
-        .padding(.bottom, 8)
-      }
+      .padding(.vertical, 4)
     }
-    .animation(.easeInOut(duration: 0.25), value: isExpanded)
   }
 }
