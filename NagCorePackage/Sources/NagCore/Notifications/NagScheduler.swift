@@ -26,13 +26,7 @@ public struct NagScheduler {
       let effectiveDue = effectiveDueDate(for: reminder, policy: policy, now: now)
       let priorSession = existingByID[reminder.id]
 
-      let isNagEnabled: Bool
-      switch globalPolicy.nagMode {
-      case .perReminder:
-        isNagEnabled = perReminderPolicy?.isEnabled ?? false
-      case .perList:
-        isNagEnabled = perReminderPolicy?.isEnabled ?? globalPolicy.nagEnabledListIDs.contains(reminder.listID)
-      }
+      let isNagEnabled = perReminderPolicy?.isEnabled ?? true
 
       guard let due = effectiveDue, !reminder.isCompleted, isNagEnabled, due <= now else {
         if priorSession != nil {
