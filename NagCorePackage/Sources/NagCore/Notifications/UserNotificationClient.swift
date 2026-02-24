@@ -10,11 +10,7 @@ public final class UserNotificationClient: NotificationClient {
   }
 
   public func requestAuthorization() async throws -> Bool {
-    #if os(macOS)
     let options: UNAuthorizationOptions = [.alert, .badge, .sound]
-    #else
-    let options: UNAuthorizationOptions = [.alert, .badge, .sound, .timeSensitive]
-    #endif
 
     return try await center.requestAuthorization(options: options)
   }

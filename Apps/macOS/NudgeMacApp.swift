@@ -39,7 +39,9 @@ private final class MacAppDependencies: ObservableObject {
         await appController.replenishSchedule()
       },
       onOpenDeepLink: { url in
-        appController.handle(url: url)
+        Task { @MainActor in
+          appController.handle(url: url)
+        }
       }
     )
 
