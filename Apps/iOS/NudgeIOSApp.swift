@@ -1,6 +1,7 @@
 import NagCore
 import SwiftData
 import SwiftUI
+import UserNotifications
 
 @MainActor
 private final class IOSAppDependencies: ObservableObject {
@@ -8,6 +9,7 @@ private final class IOSAppDependencies: ObservableObject {
   let remindersRepository: EventKitRemindersRepository
   let policyStore: SwiftDataNagPolicyStore
   let appController: NagAppController
+  let notificationDelegate: NagNotificationDelegate
 
   init() {
     do {
@@ -30,7 +32,20 @@ private final class IOSAppDependencies: ObservableObject {
       notificationClient: notificationClient
     )
 
-    appController = NagAppController(engine: engine)
+    let appController = NagAppController(engine: engine)
+    self.appController = appController
+
+    notificationDelegate = NagNotificationDelegate(
+      onAction: { actionIdentifier, reminderID in
+        await appController.handleNotificationAction(actionIdentifier, reminderID: reminderID)
+        await appController.replenishSchedule()
+      },
+      onOpenDeepLink: { url in
+        appController.handle(url: url)
+      }
+    )
+
+    UNUserNotificationCenter.current().delegate = notificationDelegate
   }
 }
 
@@ -41,12 +56,10 @@ struct NudgeIOSApp: App {
 
   var body: some Scene {
     WindowGroup {
-      NavigationStack {
-        NudgeRootView(
-          repository: dependencies.remindersRepository,
-          policyStore: dependencies.policyStore
-        )
-      }
+      NudgeRootView(
+        repository: dependencies.remindersRepository,
+        policyStore: dependencies.policyStore
+      )
       .environmentObject(dependencies.appController)
       .modelContainer(dependencies.modelContainer)
       .task {

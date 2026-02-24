@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -33,12 +33,12 @@
 /* Begin PBXFileReference section */
 		2B8DA243EDE9B225702EDEEA /* DeepLinkRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouterTests.swift; sourceTree = "<group>"; };
 		2BB741131BF520C6EE6CB1B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		384DF36150B9346F0AE9B33C /* NagCoreTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NagCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		384DF36150B9346F0AE9B33C /* NagCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NagCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		39F940BF331F7FB2C221CDC4 /* NudgemacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NudgemacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B51ED9A38B0ED4A0B4E5361 /* NagEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NagEngineTests.swift; sourceTree = "<group>"; };
-		546872894D95D498ED517ACA /* NudgeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NudgeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5AE602B1E417F6D231526518 /* NudgeiOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NudgeiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7EB0A9967E25E8843DDC1802 /* NagCorePackage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NagCorePackage; path = NagCorePackage; sourceTree = SOURCE_ROOT; };
+		546872894D95D498ED517ACA /* NudgeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NudgeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AE602B1E417F6D231526518 /* NudgeiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NudgeiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EB0A9967E25E8843DDC1802 /* NagCorePackage */ = {isa = PBXFileReference; lastKnownFileType = folder; path = NagCorePackage; sourceTree = SOURCE_ROOT; };
 		89E0B09D4E05F6B880B0324A /* DebugNotificationSimulatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugNotificationSimulatorUITests.swift; sourceTree = "<group>"; };
 		8B4B5983B231DE0BFAE180E4 /* NudgeIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeIOSApp.swift; sourceTree = "<group>"; };
 		BDE48AB57E6FEA453AF92B19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Assets.xcassets; path = Resources/Shared/Assets.xcassets; sourceTree = SOURCE_ROOT; };
@@ -281,20 +281,16 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					2919566C18DCA96B39E939B4 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					AAD82E4C53BFCA067BD651DE = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					B3398EFE78C913F9ADC6347C = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 						TestTargetID = F469D47F09B687B6B62DC16C;
 					};
 					F469D47F09B687B6B62DC16C = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -312,7 +308,6 @@
 			packageReferences = (
 				CD3875C53541EC6913AF7C2C /* XCLocalSwiftPackageReference "NagCorePackage" */,
 			);
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -453,13 +448,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needleme.app.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -469,13 +465,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needlemeapp.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = NudgeiOS;
@@ -488,12 +485,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Nudge-macOS.entitlements";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				INFOPLIST_FILE = Apps/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.mac;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needleme.app.mac;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -502,13 +500,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needlemeapp.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = NudgeiOS;
@@ -519,13 +518,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needleme.app.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -537,12 +537,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Nudge.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				INFOPLIST_FILE = Apps/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needleme.app.ios;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -554,12 +555,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Nudge.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				INFOPLIST_FILE = Apps/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needleme.app.ios;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -571,12 +573,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Nudge-macOS.entitlements";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 9XH4G9XR8X;
 				INFOPLIST_FILE = Apps/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.nudge.app.mac;
+				PRODUCT_BUNDLE_IDENTIFIER = com.needleme.app.mac;
 				SDKROOT = macosx;
 			};
 			name = Release;

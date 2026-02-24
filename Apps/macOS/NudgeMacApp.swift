@@ -1,12 +1,14 @@
 import NagCore
 import SwiftData
 import SwiftUI
+import UserNotifications
 
 @MainActor
 private final class MacAppDependencies: ObservableObject {
   let modelContainer: ModelContainer
   let remindersRepository: EventKitRemindersRepository
   let appController: NagAppController
+  let notificationDelegate: NagNotificationDelegate
 
   init() {
     do {
@@ -28,7 +30,20 @@ private final class MacAppDependencies: ObservableObject {
       notificationClient: notificationClient
     )
 
-    appController = NagAppController(engine: engine)
+    let appController = NagAppController(engine: engine)
+    self.appController = appController
+
+    notificationDelegate = NagNotificationDelegate(
+      onAction: { actionIdentifier, reminderID in
+        await appController.handleNotificationAction(actionIdentifier, reminderID: reminderID)
+        await appController.replenishSchedule()
+      },
+      onOpenDeepLink: { url in
+        appController.handle(url: url)
+      }
+    )
+
+    UNUserNotificationCenter.current().delegate = notificationDelegate
   }
 }
 
