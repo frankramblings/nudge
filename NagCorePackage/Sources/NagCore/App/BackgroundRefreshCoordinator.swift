@@ -14,7 +14,7 @@ public final class BackgroundRefreshCoordinator {
   private var macOSTimer: Timer?
 
   public init(
-    taskIdentifier: String = "com.example.Nudge.refresh",
+    taskIdentifier: String = "com.nudge.app.refresh",
     refreshInterval: TimeInterval = 15 * 60
   ) {
     self.taskIdentifier = taskIdentifier

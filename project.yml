@@ -1,6 +1,6 @@
 name: Nudge
 options:
-  bundleIdPrefix: com.example.Nudge
+  bundleIdPrefix: com.nudge.app
   deploymentTarget:
     iOS: 17.0
     macOS: 14.0
@@ -33,9 +33,10 @@ targets:
         product: NagCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.ios
+        PRODUCT_BUNDLE_IDENTIFIER: com.nudge.app.ios
         TARGETED_DEVICE_FAMILY: "1,2"
         CODE_SIGN_ENTITLEMENTS: Nudge.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
       path: Apps/iOS/Info.plist
       properties:
@@ -45,7 +46,7 @@ targets:
         NSRemindersUsageDescription: Nudge needs access to your reminders to show and manage tasks.
         NSUserNotificationsUsageDescription: Nudge uses notifications for repeating overdue reminder alerts.
         BGTaskSchedulerPermittedIdentifiers:
-          - com.example.Nudge.refresh
+          - com.nudge.app.refresh
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
@@ -69,8 +70,9 @@ targets:
         product: NagCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.mac
+        PRODUCT_BUNDLE_IDENTIFIER: com.nudge.app.mac
         CODE_SIGN_ENTITLEMENTS: Nudge-macOS.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
       path: Apps/macOS/Info.plist
       properties:
@@ -88,7 +90,7 @@ targets:
         product: NagCore
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.nudge.app.tests
         GENERATE_INFOPLIST_FILE: YES
 
   NudgeUITests:
@@ -100,7 +102,7 @@ targets:
       - target: NudgeiOS
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.Nudge.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: com.nudge.app.uitests
         TEST_TARGET_NAME: NudgeiOS
         GENERATE_INFOPLIST_FILE: YES
 
