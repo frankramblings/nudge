@@ -84,11 +84,8 @@ public struct ReminderDraft: Sendable {
 }
 
 public enum SmartList: String, CaseIterable, Identifiable, Sendable {
-  case today = "Today"
-  case scheduled = "Scheduled"
+  case upcoming = "Upcoming"
   case all = "All"
-  case flagged = "Flagged"
-  case completed = "Completed"
 
   public var id: String { rawValue }
 }

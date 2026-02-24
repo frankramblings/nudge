@@ -14,22 +14,10 @@ public protocol RemindersRepository: AnyObject {
 public extension Array where Element == ReminderItem {
   func filtered(for smartList: SmartList, now: Date = Date(), calendar: Calendar = .current) -> [ReminderItem] {
     switch smartList {
-    case .today:
-      return filter {
-        guard let dueDate = $0.dueDate else {
-          return false
-        }
-
-        return calendar.isDateInToday(dueDate) && !$0.isCompleted
-      }
-    case .scheduled:
+    case .upcoming:
       return filter { $0.dueDate != nil && !$0.isCompleted }
     case .all:
       return filter { !$0.isCompleted }
-    case .flagged:
-      return filter { $0.isFlagged && !$0.isCompleted }
-    case .completed:
-      return filter { $0.isCompleted }
     }
   }
 }

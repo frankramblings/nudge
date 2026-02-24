@@ -3,7 +3,7 @@ import Foundation
 @MainActor
 public final class ReminderListViewModel: ObservableObject {
   @Published public private(set) var reminders: [ReminderItem] = []
-  @Published public var selectedSmartList: SmartList = .today
+  @Published public var selectedSmartList: SmartList = .upcoming
   @Published public var searchText = ""
   @Published public var isLoading = false
   @Published public var errorMessage: String?
