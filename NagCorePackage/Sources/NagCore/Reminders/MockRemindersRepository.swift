@@ -5,13 +5,19 @@ public final class MockRemindersRepository: RemindersRepository {
 
   private var reminders: [ReminderItem]
   private var storeChangedHandler: (@Sendable () -> Void)?
+  private let nudgeListID: String
 
-  public init(reminders: [ReminderItem] = MockRemindersRepository.defaultReminders()) {
+  public init(reminders: [ReminderItem] = MockRemindersRepository.defaultReminders(), nudgeListID: String = "nudge") {
     self.reminders = reminders
+    self.nudgeListID = nudgeListID
   }
 
   public func requestAccess() async throws -> Bool {
     true
+  }
+
+  public func ensureNudgeList() async throws -> String {
+    nudgeListID
   }
 
   public func fetchLists() async throws -> [ReminderList] {
@@ -23,9 +29,26 @@ public final class MockRemindersRepository: RemindersRepository {
       .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
   }
 
-  public func fetchReminders(in smartList: SmartList) async throws -> [ReminderItem] {
+  public func fetchReminders(inList listID: String) async throws -> [ReminderItem] {
     reminders
-      .filtered(for: smartList)
+      .filter { $0.listID == listID && !$0.isCompleted }
+      .sorted { lhs, rhs in
+        switch (lhs.dueDate, rhs.dueDate) {
+        case let (lhsDate?, rhsDate?):
+          return lhsDate < rhsDate
+        case (nil, _?):
+          return false
+        case (_?, nil):
+          return true
+        case (nil, nil):
+          return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+        }
+      }
+  }
+
+  public func fetchAllReminders() async throws -> [ReminderItem] {
+    reminders
+      .filter { !$0.isCompleted }
       .sorted { lhs, rhs in
         switch (lhs.dueDate, rhs.dueDate) {
         case let (lhsDate?, rhsDate?):
@@ -42,7 +65,7 @@ public final class MockRemindersRepository: RemindersRepository {
 
   public func saveReminder(_ draft: ReminderDraft) async throws -> ReminderItem {
     let reminderID = draft.id ?? UUID().uuidString
-    let listTitle = reminders.first(where: { $0.listID == draft.listID })?.listTitle ?? "Reminders"
+    let listTitle = reminders.first(where: { $0.listID == draft.listID })?.listTitle ?? "Nudge"
 
     let reminder = ReminderItem(
       id: reminderID,
@@ -88,7 +111,7 @@ public final class MockRemindersRepository: RemindersRepository {
     }
 
     reminders[index].listID = listID
-    reminders[index].listTitle = "Moved"
+    reminders[index].listTitle = "Nudge"
     storeChangedHandler?()
   }
 
@@ -115,8 +138,8 @@ public final class MockRemindersRepository: RemindersRepository {
         isCompleted: false,
         isFlagged: true,
         priority: 1,
-        listID: "work",
-        listTitle: "Work",
+        listID: "nudge",
+        listTitle: "Nudge",
         hasTimeComponent: true
       ),
       ReminderItem(
@@ -127,8 +150,8 @@ public final class MockRemindersRepository: RemindersRepository {
         isCompleted: false,
         isFlagged: false,
         priority: 0,
-        listID: "home",
-        listTitle: "Home",
+        listID: "nudge",
+        listTitle: "Nudge",
         hasTimeComponent: true
       ),
       ReminderItem(
@@ -139,8 +162,8 @@ public final class MockRemindersRepository: RemindersRepository {
         isCompleted: true,
         isFlagged: false,
         priority: 0,
-        listID: "personal",
-        listTitle: "Personal",
+        listID: "nudge",
+        listTitle: "Nudge",
         hasTimeComponent: false
       ),
     ]
