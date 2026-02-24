@@ -7,6 +7,8 @@ public final class EventKitRemindersRepository: RemindersRepository {
   private var storeChangedHandler: (@Sendable () -> Void)?
   private var observer: NSObjectProtocol?
 
+  private static let nudgeListKey = "com.nudge.listID"
+
   public init(
     eventStore: EKEventStore = EKEventStore(),
     notificationCenter: NotificationCenter = .default
@@ -25,6 +27,26 @@ public final class EventKitRemindersRepository: RemindersRepository {
     try await eventStore.requestFullAccessToReminders()
   }
 
+  public func ensureNudgeList() async throws -> String {
+    if let existingID = UserDefaults.standard.string(forKey: Self.nudgeListKey),
+       eventStore.calendar(withIdentifier: existingID) != nil {
+      return existingID
+    }
+
+    // Check if a list named "Nudge" already exists
+    if let existing = eventStore.calendars(for: .reminder).first(where: { $0.title == "Nudge" }) {
+      UserDefaults.standard.set(existing.calendarIdentifier, forKey: Self.nudgeListKey)
+      return existing.calendarIdentifier
+    }
+
+    let calendar = EKCalendar(for: .reminder, eventStore: eventStore)
+    calendar.title = "Nudge"
+    calendar.source = eventStore.defaultCalendarForNewReminders()?.source
+    try eventStore.saveCalendar(calendar, commit: true)
+    UserDefaults.standard.set(calendar.calendarIdentifier, forKey: Self.nudgeListKey)
+    return calendar.calendarIdentifier
+  }
+
   public func fetchLists() async throws -> [ReminderList] {
     eventStore
       .calendars(for: .reminder)
@@ -32,26 +54,25 @@ public final class EventKitRemindersRepository: RemindersRepository {
       .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
   }
 
-  public func fetchReminders(in smartList: SmartList) async throws -> [ReminderItem] {
+  public func fetchReminders(inList listID: String) async throws -> [ReminderItem] {
+    guard let calendar = eventStore.calendar(withIdentifier: listID) else {
+      return []
+    }
+    let predicate = eventStore.predicateForReminders(in: [calendar])
+    let reminders = try await fetchReminders(matching: predicate)
+    return reminders
+      .map(mapReminder)
+      .filter { !$0.isCompleted }
+      .sorted(byDueDate: true)
+  }
+
+  public func fetchAllReminders() async throws -> [ReminderItem] {
     let predicate = eventStore.predicateForReminders(in: nil)
     let reminders = try await fetchReminders(matching: predicate)
-
-    let mapped = reminders
+    return reminders
       .map(mapReminder)
-      .sorted { lhs, rhs in
-        switch (lhs.dueDate, rhs.dueDate) {
-        case let (lhsDate?, rhsDate?):
-          return lhsDate < rhsDate
-        case (_?, nil):
-          return true
-        case (nil, _?):
-          return false
-        case (nil, nil):
-          return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
-        }
-      }
-
-    return mapped.filtered(for: smartList)
+      .filter { !$0.isCompleted }
+      .sorted(byDueDate: true)
   }
 
   public func saveReminder(_ draft: ReminderDraft) async throws -> ReminderItem {
@@ -165,5 +186,22 @@ public final class EventKitRemindersRepository: RemindersRepository {
       listTitle: reminder.calendar.title,
       hasTimeComponent: hasTimeComponent
     )
+  }
+}
+
+private extension Array where Element == ReminderItem {
+  func sorted(byDueDate ascending: Bool) -> [ReminderItem] {
+    sorted { lhs, rhs in
+      switch (lhs.dueDate, rhs.dueDate) {
+      case let (lhsDate?, rhsDate?):
+        return ascending ? lhsDate < rhsDate : lhsDate > rhsDate
+      case (_?, nil):
+        return true
+      case (nil, _?):
+        return false
+      case (nil, nil):
+        return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+      }
+    }
   }
 }
