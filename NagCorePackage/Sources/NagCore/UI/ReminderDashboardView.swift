@@ -5,6 +5,10 @@ public struct ReminderDashboardView: View {
   @EnvironmentObject private var appController: NagAppController
   @State private var quickSnoozeReminder: ReminderItem?
   @State private var showSettings = false
+  @State private var showAddReminder = false
+  @State private var showImport = false
+  @State private var expandedReminderID: String?
+  @State private var reminderPolicies: [String: NagPolicy] = [:]
 
   private let debugNotificationsEnabled: Bool
 
@@ -24,25 +28,21 @@ public struct ReminderDashboardView: View {
 
   public var body: some View {
     NavigationStack {
-      VStack(spacing: 12) {
-        Picker("Smart List", selection: $viewModel.selectedSmartList) {
-          ForEach(SmartList.allCases) { smartList in
-            Text(smartList.rawValue)
-              .tag(smartList)
-          }
-        }
-        .pickerStyle(.segmented)
-
+      VStack(spacing: 0) {
         if let errorMessage = viewModel.errorMessage {
           Text(errorMessage)
             .font(.footnote)
             .foregroundStyle(.red)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
         }
 
         ReminderListView(
           reminders: viewModel.visibleReminders,
-          nagStates: viewModel.nagPolicy.nagMode == .perReminder ? viewModel.nagStates : [:],
+          nagStates: viewModel.nagStates,
+          policies: $reminderPolicies,
+          globalPolicy: viewModel.nagPolicy,
+          expandedReminderID: $expandedReminderID,
           onToggleCompletion: { reminder in
             Task {
               await appController.markDone(reminderID: reminder.id)
@@ -55,18 +55,36 @@ public struct ReminderDashboardView: View {
           onDelete: { reminder in
             Task { await viewModel.delete(reminder) }
           },
-          onToggleNag: viewModel.nagPolicy.nagMode == .perReminder ? { reminder in
-            viewModel.toggleNag(for: reminder)
-          } : nil
+          onSavePolicy: { reminder in
+            if let policy = reminderPolicies[reminder.id] {
+              try? viewModel.policyStoreForSaving?.save(policy, for: reminder.id)
+              viewModel.loadNagStates()
+            }
+          }
         )
       }
-      .padding(.horizontal)
       .searchable(text: $viewModel.searchText)
       .navigationTitle("Nudge")
       .toolbar {
+        ToolbarItem(placement: .primaryAction) {
+          Button {
+            showAddReminder = true
+          } label: {
+            Image(systemName: "plus")
+          }
+        }
         ToolbarItem {
-          Button("Settings") {
+          Button {
+            showImport = true
+          } label: {
+            Image(systemName: "square.and.arrow.down")
+          }
+        }
+        ToolbarItem {
+          Button {
             showSettings = true
+          } label: {
+            Image(systemName: "gearshape")
           }
         }
       }
@@ -77,9 +95,6 @@ public struct ReminderDashboardView: View {
       }
       .task {
         await viewModel.refresh()
-      }
-      .onChange(of: viewModel.selectedSmartList) { _, _ in
-        Task { await viewModel.refresh() }
       }
       .sheet(item: $quickSnoozeReminder) { reminder in
         QuickSnoozeView(
@@ -110,7 +125,7 @@ public struct ReminderDashboardView: View {
       }
       .sheet(isPresented: $showSettings) {
         NavigationStack {
-          PolicySettingsView(policy: $viewModel.nagPolicy, lists: viewModel.lists)
+          PolicySettingsView(policy: $viewModel.nagPolicy)
             .navigationTitle("Nag Settings")
             .toolbar {
               ToolbarItem {
@@ -120,6 +135,33 @@ public struct ReminderDashboardView: View {
                 }
               }
             }
+        }
+      }
+      .sheet(isPresented: $showAddReminder) {
+        AddReminderView(
+          onAdd: { title, dueDate, hasTime in
+            Task {
+              await viewModel.addReminder(title: title, dueDate: dueDate, hasTimeComponent: hasTime)
+            }
+            showAddReminder = false
+          },
+          onCancel: {
+            showAddReminder = false
+          }
+        )
+      }
+      .sheet(isPresented: $showImport) {
+        if let nudgeListID = viewModel.nudgeListID {
+          ImportRemindersView(
+            nudgeListID: nudgeListID,
+            fetchLists: { await viewModel.fetchLists() },
+            fetchAllReminders: { await viewModel.fetchAllReminders() },
+            onImport: { ids in
+              Task { await viewModel.importReminders(ids: ids) }
+              showImport = false
+            },
+            onCancel: { showImport = false }
+          )
         }
       }
       #if os(iOS)
