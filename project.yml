@@ -26,8 +26,8 @@ targets:
     platform: iOS
     sources:
       - Apps/iOS
-    resources:
-      - Resources/Shared
+      - path: Resources/Shared/Assets.xcassets
+        type: folder
     dependencies:
       - package: NagCore
         product: NagCore
@@ -63,8 +63,8 @@ targets:
     platform: macOS
     sources:
       - Apps/macOS
-    resources:
-      - Resources/Shared
+      - path: Resources/Shared/Assets.xcassets
+        type: folder
     dependencies:
       - package: NagCore
         product: NagCore
