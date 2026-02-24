@@ -35,7 +35,8 @@ public final class NagEngine {
     perSessionCap: Int = 5,
     globalCap: Int = 40
   ) async throws -> NagScheduleDecision {
-    let reminders = try await remindersRepository.fetchReminders(in: .all)
+    let nudgeListID = try await remindersRepository.ensureNudgeList()
+    let reminders = try await remindersRepository.fetchReminders(inList: nudgeListID)
     let existingSessions = sessionStore.allSessions()
 
     let decision = scheduler.buildSchedule(
