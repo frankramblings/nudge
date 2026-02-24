@@ -1,40 +1,104 @@
-# Default View Redesign
+# Default View Redesign Implementation Plan
 
-**Date:** 2026-02-23
-**Status:** Approved
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-## Problem
+**Goal:** Replace the 5-case SmartList enum with 2 cases (Upcoming/All) and default to Upcoming, focusing the UI on nag configuration.
 
-Nudge defaults to the "Today" smart list, which is too narrow for its primary use case: configuring which reminders get nagged. The 5-tab segmented picker (Today/Scheduled/All/Flagged/Completed) mirrors Apple Reminders but adds clutter for a nag-configuration app.
+**Architecture:** SmartList enum shrinks from 5 to 2 cases. The `filtered(for:)` extension updates to match. The segmented picker auto-adapts via `SmartList.allCases`. No new files, no new dependencies.
 
-## Decision
+**Tech Stack:** Swift 5.10, SwiftUI, NagCorePackage
 
-Replace the 5-case `SmartList` enum with 2 cases and default to "Upcoming."
+---
 
-## Design
+### Task 1: Update SmartList enum and filter logic
 
-### SmartList enum
+**Files:**
+- Modify: `NagCorePackage/Sources/NagCore/Models/ReminderItem.swift:86-94`
+- Modify: `NagCorePackage/Sources/NagCore/Reminders/RemindersRepository.swift:14-35`
 
-| Case | Display name | Filter |
-|------|-------------|--------|
-| `.upcoming` | Upcoming | Has due date, not completed |
-| `.all` | All | Not completed |
+**Step 1: Update SmartList enum**
 
-Default: `.upcoming`
+In `ReminderItem.swift`, replace the SmartList enum:
 
-Removed cases: `.today`, `.flagged`, `.completed`
+```swift
+public enum SmartList: String, CaseIterable, Identifiable, Sendable {
+  case upcoming = "Upcoming"
+  case all = "All"
 
-### UI
+  public var id: String { rawValue }
+}
+```
 
-- Segmented picker shrinks from 5 to 2 segments: **Upcoming** | **All**
-- List remains flat, sorted by due date
-- Bell toggle (perReminder mode), swipe actions, search all unchanged
+**Step 2: Update filtered(for:) extension**
 
-### Files affected
+In `RemindersRepository.swift`, replace the `filtered(for:)` method:
 
-- `ReminderItem.swift` — `SmartList` enum: remove 3 cases, rename `.scheduled` to `.upcoming`
-- `RemindersRepository.swift` — `filtered(for:)`: remove 3 cases, rename `.scheduled` to `.upcoming`
-- `ReminderListViewModel.swift` — change default from `.today` to `.upcoming`
-- `ReminderDashboardView.swift` — picker auto-updates via `SmartList.allCases`
-- `MockRemindersRepository.swift` — update any references to removed cases
-- Tests — update references to old SmartList cases
+```swift
+public extension Array where Element == ReminderItem {
+  func filtered(for smartList: SmartList, now: Date = Date(), calendar: Calendar = .current) -> [ReminderItem] {
+    switch smartList {
+    case .upcoming:
+      return filter { $0.dueDate != nil && !$0.isCompleted }
+    case .all:
+      return filter { !$0.isCompleted }
+    }
+  }
+}
+```
+
+**Step 3: Run tests to verify nothing breaks**
+
+Run: `swift test --package-path NagCorePackage`
+Expected: All 17 tests pass (no tests reference SmartList cases directly)
+
+**Step 4: Commit**
+
+```bash
+git add NagCorePackage/Sources/NagCore/Models/ReminderItem.swift NagCorePackage/Sources/NagCore/Reminders/RemindersRepository.swift
+git commit -m "refactor: reduce SmartList to Upcoming and All cases"
+```
+
+---
+
+### Task 2: Update view model default
+
+**Files:**
+- Modify: `NagCorePackage/Sources/NagCore/UI/ReminderListViewModel.swift:6`
+
+**Step 1: Change default SmartList**
+
+In `ReminderListViewModel.swift` line 6, change:
+
+```swift
+@Published public var selectedSmartList: SmartList = .upcoming
+```
+
+**Step 2: Run tests to verify**
+
+Run: `swift test --package-path NagCorePackage`
+Expected: All tests pass
+
+**Step 3: Commit**
+
+```bash
+git add NagCorePackage/Sources/NagCore/UI/ReminderListViewModel.swift
+git commit -m "feat: default to Upcoming view for nag configuration"
+```
+
+---
+
+### Task 3: Verify full build
+
+**Step 1: Build the package**
+
+Run: `swift build --package-path NagCorePackage`
+Expected: Build succeeds with no errors
+
+**Step 2: Run full test suite**
+
+Run: `swift test --package-path NagCorePackage`
+Expected: All 17 tests pass
+
+**Step 3: Final commit (if any fixups needed)**
+
+Only if previous steps required changes not yet committed.
