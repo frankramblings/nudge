@@ -47,12 +47,13 @@ public struct ReminderListView: View {
           onToggleComplete: { onToggleCompletion(reminder) },
           onQuickSnooze: { onQuickSnooze(reminder) },
           onTap: {
-            withAnimation {
+            withAnimation(.easeInOut(duration: 0.25)) {
               expandedReminderID = expandedReminderID == reminder.id ? nil : reminder.id
             }
           },
           onSavePolicy: { onSavePolicy(reminder) }
         )
+        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
         .swipeActions(allowsFullSwipe: true) {
           Button(role: .destructive) {
             onDelete(reminder)
@@ -69,5 +70,6 @@ public struct ReminderListView: View {
         }
       }
     }
+    .listStyle(.plain)
   }
 }

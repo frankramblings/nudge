@@ -32,16 +32,18 @@ public struct ReminderRowView: View {
 
   public var body: some View {
     VStack(alignment: .leading, spacing: 0) {
-      HStack(alignment: .top, spacing: 12) {
+      // Main row content
+      HStack(spacing: 14) {
         Button(action: onToggleComplete) {
           Image(systemName: reminder.isCompleted ? "checkmark.circle.fill" : "circle")
-            .imageScale(.large)
+            .font(.title2)
+            .foregroundStyle(reminder.isCompleted ? .green : .secondary)
         }
         .buttonStyle(.plain)
 
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
           Text(reminder.title)
-            .font(.headline)
+            .font(.body)
             .foregroundStyle(reminder.isCompleted ? .secondary : .primary)
             .strikethrough(reminder.isCompleted, pattern: .solid)
 
@@ -54,7 +56,7 @@ public struct ReminderRowView: View {
 
           if let dueDate = reminder.dueDate {
             Text(dueDate, style: .relative)
-              .font(.caption)
+              .font(.subheadline)
               .foregroundStyle(.secondary)
           }
         }
@@ -62,24 +64,35 @@ public struct ReminderRowView: View {
         Spacer(minLength: 0)
 
         Image(systemName: isNagging ? "bell.fill" : "bell.slash")
-          .foregroundStyle(isNagging ? .orange : .secondary)
+          .font(.subheadline)
+          .foregroundStyle(isNagging ? .orange : .secondary.opacity(0.5))
       }
-      .padding(.vertical, 4)
+      .padding(.vertical, 8)
       .contentShape(Rectangle())
       .onTapGesture(perform: onTap)
 
+      // Expanded settings
       if isExpanded {
         Divider()
-          .padding(.vertical, 4)
+          .padding(.leading, 40)
 
         InlineNagSettingsView(policy: $policy)
           .onChange(of: policy) { _, _ in onSavePolicy() }
+          .padding(.leading, 40)
+          .padding(.vertical, 12)
 
-        Button("Snooze", action: onQuickSnooze)
+        HStack {
+          Spacer()
+          Button(action: onQuickSnooze) {
+            Label("Snooze", systemImage: "clock")
+          }
           .buttonStyle(.bordered)
-          .font(.caption)
-          .padding(.top, 4)
+          .controlSize(.small)
+          Spacer()
+        }
+        .padding(.bottom, 8)
       }
     }
+    .animation(.easeInOut(duration: 0.25), value: isExpanded)
   }
 }
