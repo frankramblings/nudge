@@ -3,21 +3,12 @@ import Foundation
 public protocol RemindersRepository: AnyObject {
   func requestAccess() async throws -> Bool
   func fetchLists() async throws -> [ReminderList]
-  func fetchReminders(in smartList: SmartList) async throws -> [ReminderItem]
+  func fetchReminders(inList listID: String) async throws -> [ReminderItem]
+  func fetchAllReminders() async throws -> [ReminderItem]
+  func ensureNudgeList() async throws -> String
   func saveReminder(_ draft: ReminderDraft) async throws -> ReminderItem
   func setCompleted(reminderID: String, isCompleted: Bool) async throws
   func deleteReminder(id: String) async throws
   func moveReminder(id: String, to listID: String) async throws
   func setStoreChangedHandler(_ handler: (@Sendable () -> Void)?)
-}
-
-public extension Array where Element == ReminderItem {
-  func filtered(for smartList: SmartList, now: Date = Date(), calendar: Calendar = .current) -> [ReminderItem] {
-    switch smartList {
-    case .upcoming:
-      return filter { $0.dueDate != nil && !$0.isCompleted }
-    case .all:
-      return filter { !$0.isCompleted }
-    }
-  }
 }

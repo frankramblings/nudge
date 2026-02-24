@@ -82,10 +82,3 @@ public struct ReminderDraft: Sendable {
     self.listID = listID
   }
 }
-
-public enum SmartList: String, CaseIterable, Identifiable, Sendable {
-  case upcoming = "Upcoming"
-  case all = "All"
-
-  public var id: String { rawValue }
-}
