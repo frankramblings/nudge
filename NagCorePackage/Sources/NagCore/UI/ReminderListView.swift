@@ -3,25 +3,34 @@ import SwiftUI
 public struct ReminderListView: View {
   private let reminders: [ReminderItem]
   private let nagStates: [String: Bool]
+  @Binding private var policies: [String: NagPolicy]
+  private let globalPolicy: NagPolicy
+  @Binding private var expandedReminderID: String?
   private let onToggleCompletion: (ReminderItem) -> Void
   private let onQuickSnooze: (ReminderItem) -> Void
   private let onDelete: (ReminderItem) -> Void
-  private let onToggleNag: ((ReminderItem) -> Void)?
+  private let onSavePolicy: (ReminderItem) -> Void
 
   public init(
     reminders: [ReminderItem],
-    nagStates: [String: Bool] = [:],
+    nagStates: [String: Bool],
+    policies: Binding<[String: NagPolicy]>,
+    globalPolicy: NagPolicy,
+    expandedReminderID: Binding<String?>,
     onToggleCompletion: @escaping (ReminderItem) -> Void,
     onQuickSnooze: @escaping (ReminderItem) -> Void,
     onDelete: @escaping (ReminderItem) -> Void,
-    onToggleNag: ((ReminderItem) -> Void)? = nil
+    onSavePolicy: @escaping (ReminderItem) -> Void
   ) {
     self.reminders = reminders
     self.nagStates = nagStates
+    _policies = policies
+    self.globalPolicy = globalPolicy
+    _expandedReminderID = expandedReminderID
     self.onToggleCompletion = onToggleCompletion
     self.onQuickSnooze = onQuickSnooze
     self.onDelete = onDelete
-    self.onToggleNag = onToggleNag
+    self.onSavePolicy = onSavePolicy
   }
 
   public var body: some View {
@@ -29,10 +38,20 @@ public struct ReminderListView: View {
       ForEach(reminders) { reminder in
         ReminderRowView(
           reminder: reminder,
-          isNagging: nagStates.isEmpty ? nil : nagStates[reminder.id] ?? false,
+          isNagging: nagStates[reminder.id] ?? true,
+          policy: Binding(
+            get: { policies[reminder.id] ?? globalPolicy },
+            set: { policies[reminder.id] = $0 }
+          ),
+          isExpanded: expandedReminderID == reminder.id,
           onToggleComplete: { onToggleCompletion(reminder) },
           onQuickSnooze: { onQuickSnooze(reminder) },
-          onToggleNag: onToggleNag.map { handler in { handler(reminder) } }
+          onTap: {
+            withAnimation {
+              expandedReminderID = expandedReminderID == reminder.id ? nil : reminder.id
+            }
+          },
+          onSavePolicy: { onSavePolicy(reminder) }
         )
         .swipeActions(allowsFullSwipe: true) {
           Button(role: .destructive) {
